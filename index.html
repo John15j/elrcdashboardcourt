@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ERLC Court System</title>
+<link rel="stylesheet" href="css/main.css">
+<script defer src="js/storage.js"></script>
+<script defer src="js/database.js"></script>
+<script defer src="js/router.js"></script>
+<script defer src="js/modals.js"></script>
+<script defer src="js/cases.js"></script>
+<script defer src="js/defendants.js"></script>
+<script defer src="js/officers.js"></script>
+<script defer src="js/ai.js"></script>
+<script defer src="js/cases-ui.js"></script>
+<script defer src="js/courtroom.js"></script>
+<script defer src="js/app.js"></script>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+<h2>ERLC COURT</h2>
+<nav>
+<button class="nav-btn" data-page="dashboard">Dashboard</button>
+<button class="nav-btn" data-page="cases">Cases</button>
+<button class="nav-btn" data-page="courtroom">Courtroom</button>
+</nav>
+</aside>
+
+<main class="main">
+<section id="dashboardPage" class="page active">
+<h1>Dashboard</h1>
+<p>System Online</p>
+</section>
+
+<section id="casesPage" class="page">
+<h1>Cases</h1>
+<button id="createCaseBtn">Create Case</button>
+<div id="casesTable"></div>
+</section>
+
+<section id="courtroomPage" class="page">
+<h1>Courtroom Mode</h1>
+
+<div class="court-grid">
+<div>
+<h3>Case</h3>
+<div id="courtCaseInfo"></div>
+
+<h3>People</h3>
+<div id="courtPeople"></div>
+</div>
+
+<div>
+<h3>Live Court</h3>
+<textarea id="courtLog" style="width:100%;height:300px;"></textarea>
+
+<button onclick="Courtroom.pause()">Pause</button>
+<button onclick="Courtroom.resume()">Resume</button>
+<button onclick="Courtroom.verdict()">Verdict</button>
+</div>
+
+<div>
+<h3>AI Assistant</h3>
+<button onclick="Courtroom.runAI()">Analyze Case</button>
+<div id="aiOutput"></div>
+</div>
+</div>
+
+</section>
+
+</main>
+</div>
+
+<div id="modalContainer"></div>
+<script src="js/app.js"></script>
+</body>
+</html>

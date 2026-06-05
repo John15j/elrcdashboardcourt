@@ -1,0 +1,8 @@
+
+body{margin:0;font-family:Arial;background:#0b1120;color:white}
+.app{display:flex;height:100vh}
+.sidebar{width:200px;background:#111827;padding:10px}
+.main{flex:1;padding:20px}
+.page{display:none}
+.page.active{display:block}
+.court-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
