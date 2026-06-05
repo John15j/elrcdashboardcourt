@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Court OS V3</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="logo">⚖ Court OS</div>
+
+    <button onclick="show('dashboard')">Dashboard</button>
+    <button onclick="show('cases')">Cases</button>
+    <button onclick="show('defendants')">Defendants</button>
+    <button onclick="show('evidence')">Evidence</button>
+    <button onclick="show('ai')">AI Judge</button>
+</div>
+
+<div class="main">
+
+<section id="dashboard" class="page active">
+    <h1>Overview</h1>
+
+    <div class="grid">
+        <div class="card">Cases <span id="caseCount"></span></div>
+        <div class="card">Defendants <span id="defCount"></span></div>
+        <div class="card">Evidence <span id="evCount"></span></div>
+    </div>
+
+    <div class="panel">
+        <canvas id="chart"></canvas>
+    </div>
+</section>
+
+<section id="cases" class="page">
+    <h1>Cases</h1>
+    <input id="searchCases" placeholder="Search cases..." oninput="renderCases()">
+    <button onclick="addCase()">+ New Case</button>
+    <div id="caseList"></div>
+</section>
+
+<section id="defendants" class="page">
+    <h1>Defendants</h1>
+    <button onclick="addDefendant()">+ Add</button>
+    <div id="defList"></div>
+</section>
+
+<section id="evidence" class="page">
+    <h1>Evidence Locker</h1>
+    <button onclick="addEvidence()">+ Upload</button>
+    <div id="evList"></div>
+</section>
+
+<section id="ai" class="page">
+    <h1>AI Judge Engine</h1>
+    <textarea id="facts" placeholder="Enter case details..."></textarea>
+    <button onclick="runAI()">Analyze Case</button>
+    <div id="aiOut"></div>
+</section>
+
+</div>
+
+<script src="db.js"></script>
+<script src="reports.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
