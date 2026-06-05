@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERLC Judicial Management System</title>
+
+<link rel="stylesheet" href="css/main.css">
+
+<script defer src="js/storage.js"></script>
+<script defer src="js/app.js"></script>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<div class="logo">
+⚖️ ERLC JMS
+</div>
+
+<nav>
+<a href="index.html">Dashboard</a>
+<a href="pages/cases.html">Cases</a>
+<a href="pages/defendants.html">Defendants</a>
+<a href="pages/warrants.html">Warrants</a>
+<a href="pages/hearings.html">Hearings</a>
+<a href="pages/analytics.html">Analytics</a>
+</nav>
+
+</div>
+
+<div class="main">
+
+<header>
+
+<div class="search-bar">
+<input id="globalSearch" placeholder="Search Cases, Defendants, Warrants...">
+</div>
+
+</header>
+
+<section class="dashboard">
+
+<div class="card">
+<h3>Open Cases</h3>
+<p id="openCases">0</p>
+</div>
+
+<div class="card">
+<h3>Pending Warrants</h3>
+<p id="pendingWarrants">0</p>
+</div>
+
+<div class="card">
+<h3>Hearings</h3>
+<p id="hearingCount">0</p>
+</div>
+
+<div class="card">
+<h3>Conviction Rate</h3>
+<p id="convictionRate">0%</p>
+</div>
+
+</section>
+
+<section class="activity">
+
+<h2>Recent Activity</h2>
+
+<ul id="activityFeed"></ul>
+
+</section>
+
+</div>
+
+<button class="fab" id="quickCreate">
++
+</button>
+
+</body>
+</html>
