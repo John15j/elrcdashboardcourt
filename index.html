@@ -2,45 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
 <title>ERLC Judicial Management System</title>
 
 <link rel="stylesheet" href="css/main.css">
 
 <script defer src="js/storage.js"></script>
+<script defer src="js/database.js"></script>
+<script defer src="js/router.js"></script>
+<script defer src="js/modals.js"></script>
+<script defer src="js/dashboard.js"></script>
+<script defer src="js/cases.js"></script>
+<script defer src="js/defendants.js"></script>
+<script defer src="js/officers.js"></script>
+<script defer src="js/hearings.js"></script>
+<script defer src="js/courtroom.js"></script>
+<script defer src="js/ai.js"></script>
 <script defer src="js/app.js"></script>
 </head>
 
 <body>
 
-<div class="sidebar">
+<div class="app">
 
-<div class="logo">
-⚖️ ERLC JMS
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<div class="brand">
+
+<img
+src="assets/logo.png"
+alt="ERLC Logo"
+class="logo">
+
+<div>
+<h2>ERLC JMS</h2>
+<span>Judge Operations Center</span>
+</div>
+
 </div>
 
 <nav>
-<a href="index.html">Dashboard</a>
-<a href="pages/cases.html">Cases</a>
-<a href="pages/defendants.html">Defendants</a>
-<a href="pages/warrants.html">Warrants</a>
-<a href="pages/hearings.html">Hearings</a>
-<a href="pages/analytics.html">Analytics</a>
+
+<button class="nav-btn active" data-page="dashboard">
+Dashboard
+</button>
+
+<button class="nav-btn" data-page="cases">
+Cases
+</button>
+
+<button class="nav-btn" data-page="defendants">
+Defendants
+</button>
+
+<button class="nav-btn" data-page="officers">
+Officers
+</button>
+
+<button class="nav-btn" data-page="hearings">
+Hearings
+</button>
+
+<button class="nav-btn" data-page="courtroom">
+Courtroom
+</button>
+
+<button class="nav-btn" data-page="analytics">
+Analytics
+</button>
+
+<button class="nav-btn" data-page="penalcode">
+Penal Code
+</button>
+
 </nav>
 
-</div>
+</aside>
 
-<div class="main">
+<!-- MAIN -->
 
-<header>
+<main class="main">
 
-<div class="search-bar">
-<input id="globalSearch" placeholder="Search Cases, Defendants, Warrants...">
+<header class="topbar">
+
+<input
+id="globalSearch"
+placeholder="Search Cases, Defendants, Officers, Hearings..."
+type="text">
+
+<div class="topbar-actions">
+
+<button id="exportBtn">
+Export Backup
+</button>
+
+<button id="importBtn">
+Import Backup
+</button>
+
 </div>
 
 </header>
 
-<section class="dashboard">
+<!-- DASHBOARD -->
+
+<section id="dashboardPage" class="page active">
+
+<h1>Judge Command Center</h1>
+
+<div class="stats-grid">
 
 <div class="card">
 <h3>Open Cases</h3>
@@ -48,13 +121,13 @@
 </div>
 
 <div class="card">
-<h3>Pending Warrants</h3>
-<p id="pendingWarrants">0</p>
+<h3>Pending Hearings</h3>
+<p id="pendingHearings">0</p>
 </div>
 
 <div class="card">
-<h3>Hearings</h3>
-<p id="hearingCount">0</p>
+<h3>Defendants</h3>
+<p id="defendantCount">0</p>
 </div>
 
 <div class="card">
@@ -62,19 +135,152 @@
 <p id="convictionRate">0%</p>
 </div>
 
-</section>
+</div>
 
-<section class="activity">
+<div class="dashboard-grid">
 
-<h2>Recent Activity</h2>
+<div class="panel">
 
-<ul id="activityFeed"></ul>
+<h2>Today's Docket</h2>
 
-</section>
+<div id="todayDocket">
+No hearings scheduled.
+</div>
 
 </div>
 
-<button class="fab" id="quickCreate">
+<div class="panel">
+
+<h2>Recent Activity</h2>
+
+<div id="activityFeed">
+No activity yet.
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CASES -->
+
+<section id="casesPage" class="page">
+
+<div class="page-header">
+
+<h1>Cases</h1>
+
+<button id="createCaseBtn">
++ Create Case
+</button>
+
+</div>
+
+<div id="casesTable"></div>
+
+</section>
+
+<!-- DEFENDANTS -->
+
+<section id="defendantsPage" class="page">
+
+<div class="page-header">
+
+<h1>Defendants</h1>
+
+<button id="createDefendantBtn">
++ Create Defendant
+</button>
+
+</div>
+
+<div id="defendantsTable"></div>
+
+</section>
+
+<!-- OFFICERS -->
+
+<section id="officersPage" class="page">
+
+<div class="page-header">
+
+<h1>Officers</h1>
+
+<button id="createOfficerBtn">
++ Create Officer
+</button>
+
+</div>
+
+<div id="officersTable"></div>
+
+</section>
+
+<!-- HEARINGS -->
+
+<section id="hearingsPage" class="page">
+
+<div class="page-header">
+
+<h1>Hearings</h1>
+
+<button id="createHearingBtn">
++ Schedule Hearing
+</button>
+
+</div>
+
+<div id="hearingsTable"></div>
+
+</section>
+
+<!-- COURTROOM -->
+
+<section id="courtroomPage" class="page">
+
+<h1>Courtroom Mode</h1>
+
+<div class="courtroom-layout">
+
+<div class="court-panel">
+
+<h2>Case Information</h2>
+
+<div id="courtCaseInfo"></div>
+
+</div>
+
+<div class="court-panel">
+
+<h2>Court Notes</h2>
+
+<textarea
+id="courtNotes"
+placeholder="Judge Notes...">
+</textarea>
+
+</div>
+
+<div class="court-panel">
+
+<h2>People Involved</h2>
+
+<div id="courtPeople"></div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+<div id="modalContainer"></div>
+
+<button id="quickActionBtn">
 +
 </button>
 
