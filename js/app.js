@@ -1,16 +1,13 @@
-document.addEventListener(
-  "DOMContentLoaded",
-  ()=>{
+document.addEventListener("DOMContentLoaded", () => {
 
-    DB.initialize();
+  DB.initialize();
 
-    Router.init();
+  Router.init();
 
-    Dashboard.load();
+  Dashboard.load();
 
-    console.log(
-      "ERLC JMS Loaded"
-    );
+  CasesUI.init();
 
-  }
-);
+  console.log("ERLC Court System Online");
+
+});
