@@ -1,11 +1,43 @@
+const Router = {
 
-const Router={
-init(){
-document.querySelectorAll('.nav-btn').forEach(b=>{
-b.onclick=()=>{
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
-document.getElementById(b.dataset.page+'Page').classList.add('active')
-}
-})
-}
-}
+    init() {
+
+        document
+            .querySelectorAll(
+                ".nav-btn"
+            )
+            .forEach(btn => {
+
+                btn.addEventListener(
+                    "click",
+                    () => {
+
+                        document
+                            .querySelectorAll(
+                                ".page"
+                            )
+                            .forEach(page => {
+
+                                page.classList.remove(
+                                    "active"
+                                );
+
+                            });
+
+                        document
+                            .getElementById(
+                                btn.dataset.page +
+                                "Page"
+                            )
+                            .classList.add(
+                                "active"
+                            );
+
+                    }
+                );
+
+            });
+
+    }
+
+};
