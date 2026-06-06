@@ -1,8 +1,318 @@
+:root{
+    --bg:#0b1220;
+    --panel:#111827;
+    --panel2:#1f2937;
+    --border:#2d3748;
+    --text:#f3f4f6;
+    --muted:#9ca3af;
+    --accent:#2563eb;
 
-body{margin:0;font-family:Arial;background:#0b1120;color:white}
-.app{display:flex;height:100vh}
-.sidebar{width:200px;background:#111827;padding:10px}
-.main{flex:1;padding:20px}
-.page{display:none}
-.page.active{display:block}
-.court-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+    --open:#3b82f6;
+    --pending:#eab308;
+    --incourt:#8b5cf6;
+    --closed:#22c55e;
+    --dismissed:#ef4444;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Segoe UI,Arial,sans-serif;
+    height:100vh;
+    overflow:hidden;
+}
+
+.app{
+    display:flex;
+    height:100vh;
+}
+
+.sidebar{
+    width:280px;
+    background:var(--panel);
+    border-right:1px solid var(--border);
+    padding:20px;
+}
+
+.seal-container{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.seal-placeholder{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    );
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+}
+
+.brand h2{
+    font-size:18px;
+}
+
+.brand p{
+    color:var(--muted);
+    font-size:12px;
+}
+
+nav{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.nav-btn{
+    border:none;
+    background:var(--panel2);
+    color:white;
+    padding:14px;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:left;
+    transition:.2s;
+}
+
+.nav-btn:hover{
+    background:#374151;
+}
+
+.nav-btn.active{
+    background:var(--accent);
+}
+
+.main{
+    flex:1;
+    overflow:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:20px;
+    background:var(--panel);
+
+    border-bottom:
+    1px solid var(--border);
+}
+
+.header-left h1{
+    font-size:24px;
+}
+
+.header-left span{
+    color:var(--muted);
+}
+
+.header-center input{
+    width:450px;
+    max-width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:var(--panel2);
+    color:white;
+}
+
+.header-right{
+    display:flex;
+    gap:15px;
+    align-items:center;
+}
+
+.activity-indicator{
+    background:#22c55e;
+    color:black;
+    font-weight:bold;
+    padding:8px 14px;
+    border-radius:999px;
+}
+
+.page{
+    display:none;
+    padding:20px;
+}
+
+.page.active{
+    display:block;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.stat-card{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+}
+
+.stat-card h3{
+    color:var(--muted);
+    margin-bottom:10px;
+}
+
+.stat-card p{
+    font-size:34px;
+    font-weight:bold;
+}
+
+.command-grid{
+    margin-top:25px;
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+}
+
+.command-btn{
+    background:
+    linear-gradient(
+        135deg,
+        #1e40af,
+        #2563eb
+    );
+
+    border:none;
+    color:white;
+
+    padding:20px;
+
+    border-radius:14px;
+
+    font-size:16px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.command-btn:hover{
+    transform:translateY(-2px);
+}
+
+.panel-grid{
+    margin-top:25px;
+
+    display:grid;
+
+    grid-template-columns:
+    1fr 1fr 1fr;
+
+    gap:20px;
+}
+
+.panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+
+    border-radius:14px;
+
+    padding:20px;
+
+    min-height:300px;
+}
+
+.panel h2{
+    margin-bottom:15px;
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+
+    background:
+    rgba(0,0,0,.7);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:999;
+}
+
+.modal{
+    width:700px;
+    max-width:95%;
+
+    background:var(--panel);
+
+    border-radius:14px;
+
+    padding:25px;
+}
+
+.modal-close{
+    float:right;
+    cursor:pointer;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    margin-top:10px;
+    margin-bottom:15px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:var(--panel2);
+
+    color:white;
+}
+
+button{
+    cursor:pointer;
+}
+
+.status-open{
+    color:var(--open);
+}
+
+.status-pending{
+    color:var(--pending);
+}
+
+.status-incourt{
+    color:var(--incourt);
+}
+
+.status-closed{
+    color:var(--closed);
+}
+
+.status-dismissed{
+    color:var(--dismissed);
+}
