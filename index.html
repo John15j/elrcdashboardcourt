@@ -1,79 +1,274 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ERLC Court System</title>
-<link rel="stylesheet" href="main.css">
-<script defer src="storage.js"></script>
-<script defer src="database.js"></script>
-<script defer src="router.js"></script>
-<script defer src="modals.js"></script>
-<script defer src="cases.js"></script>
-<script defer src="defendants.js"></script>
-<script defer src="officers.js"></script>
-<script defer src="ai.js"></script>
-<script defer src="cases-ui.js"></script>
-<script defer src="courtroom.js"></script>
-<script defer src="app.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ERLC Judicial Management System</title>
+
+<link rel="stylesheet" href="css/main.css">
+
+<script defer src="js/storage.js"></script>
+<script defer src="js/database.js"></script>
+<script defer src="js/router.js"></script>
+<script defer src="js/modal.js"></script>
+<script defer src="js/dashboard.js"></script>
+<script defer src="js/app.js"></script>
+
 </head>
+
 <body>
+
 <div class="app">
-<aside class="sidebar">
-<h2>ERLC COURT</h2>
-<nav>
-<button class="nav-btn" data-page="dashboard">Dashboard</button>
-<button class="nav-btn" data-page="cases">Cases</button>
-<button class="nav-btn" data-page="courtroom">Courtroom</button>
-</nav>
-</aside>
 
-<main class="main">
-<section id="dashboardPage" class="page active">
-<h1>Dashboard</h1>
-<p>System Online</p>
-</section>
+    <!-- SIDEBAR -->
 
-<section id="casesPage" class="page">
-<h1>Cases</h1>
-<button id="createCaseBtn">Create Case</button>
-<div id="casesTable"></div>
-</section>
+    <aside class="sidebar">
 
-<section id="courtroomPage" class="page">
-<h1>Courtroom Mode</h1>
+        <div class="seal-container">
 
-<div class="court-grid">
-<div>
-<h3>Case</h3>
-<div id="courtCaseInfo"></div>
+            <div class="seal-placeholder">
+                ERLC
+            </div>
 
-<h3>People</h3>
-<div id="courtPeople"></div>
-</div>
+            <div class="brand">
 
-<div>
-<h3>Live Court</h3>
-<textarea id="courtLog" style="width:100%;height:300px;"></textarea>
+                <h2>ERLC Judicial</h2>
 
-<button onclick="Courtroom.pause()">Pause</button>
-<button onclick="Courtroom.resume()">Resume</button>
-<button onclick="Courtroom.verdict()">Verdict</button>
-</div>
+                <p>Judge Operations Center</p>
 
-<div>
-<h3>AI Assistant</h3>
-<button onclick="Courtroom.runAI()">Analyze Case</button>
-<div id="aiOutput"></div>
-</div>
-</div>
+            </div>
 
-</section>
+        </div>
 
-</main>
+        <nav>
+
+            <button class="nav-btn active"
+                    data-page="dashboard">
+
+                Dashboard
+
+            </button>
+
+            <button class="nav-btn"
+                    data-page="cases">
+
+                Cases
+
+            </button>
+
+            <button class="nav-btn"
+                    data-page="courtroom">
+
+                Courtroom
+
+            </button>
+
+            <button class="nav-btn"
+                    data-page="records">
+
+                Records
+
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- HEADER -->
+
+        <header class="header">
+
+            <div class="header-left">
+
+                <h1>
+                    ERLC Judicial Management System
+                </h1>
+
+                <span>
+                    Judge Operations Center
+                </span>
+
+            </div>
+
+            <div class="header-center">
+
+                <input
+                    id="globalSearch"
+                    type="text"
+                    placeholder="Search Cases, Defendants, Officers, Hearings">
+
+            </div>
+
+            <div class="header-right">
+
+                <div id="currentTime">
+                    Loading...
+                </div>
+
+                <div class="activity-indicator">
+
+                    ACTIVE
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- DASHBOARD -->
+
+        <section
+            id="dashboardPage"
+            class="page active">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <h3>Open Cases</h3>
+
+                    <p id="openCases">0</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>Pending Hearings</h3>
+
+                    <p id="pendingHearings">0</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>Closed Cases</h3>
+
+                    <p id="closedCases">0</p>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <h3>Active Defendants</h3>
+
+                    <p id="activeDefendants">0</p>
+
+                </div>
+
+            </div>
+
+            <!-- COMMAND CENTER -->
+
+            <div class="command-grid">
+
+                <button class="command-btn">
+
+                    CREATE CASE
+
+                </button>
+
+                <button class="command-btn">
+
+                    OPEN COURT
+
+                </button>
+
+                <button class="command-btn">
+
+                    FIND DEFENDANT
+
+                </button>
+
+                <button class="command-btn">
+
+                    RECORDS
+
+                </button>
+
+            </div>
+
+            <!-- PANELS -->
+
+            <div class="panel-grid">
+
+                <div class="panel">
+
+                    <h2>Recent Activity</h2>
+
+                    <div id="activityFeed">
+
+                        No activity recorded.
+
+                    </div>
+
+                </div>
+
+                <div class="panel">
+
+                    <h2>Today's Docket</h2>
+
+                    <div id="todayDocket">
+
+                        No hearings scheduled.
+
+                    </div>
+
+                </div>
+
+                <div class="panel">
+
+                    <h2>Case Overview</h2>
+
+                    <div id="caseOverview">
+
+                        Select a case to view details.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- PLACEHOLDERS -->
+
+        <section
+            id="casesPage"
+            class="page">
+
+            <h1>Cases Module Coming In Build 2</h1>
+
+        </section>
+
+        <section
+            id="courtroomPage"
+            class="page">
+
+            <h1>Courtroom Module Coming In Build 3</h1>
+
+        </section>
+
+        <section
+            id="recordsPage"
+            class="page">
+
+            <h1>Records Module Coming In Build 3</h1>
+
+        </section>
+
+    </main>
+
 </div>
 
 <div id="modalContainer"></div>
-<script src="js/app.js"></script>
+
 </body>
 </html>
