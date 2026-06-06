@@ -1,7 +1,12 @@
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-document.addEventListener('DOMContentLoaded',()=>{
-Router.init()
-DB.init()
-CasesUI.init()
-Courtroom.load()
-})
+        Database.init();
+
+        console.log(
+            "ERLC System Loaded"
+        );
+
+    }
+);
