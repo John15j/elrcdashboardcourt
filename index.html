@@ -3,272 +3,291 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ERLC Judicial Management System</title>
+    <title>ERLC Judicial Management System</title>
 
-<link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css">
 
-<script defer src="storage.js"></script>
-<script defer src="database.js"></script>
-<script defer src="router.js"></script>
-<script defer src="modal.js"></script>
-<script defer src="dashboard.js"></script>
-<script defer src="app.js"></script>
+    <script defer src="storage.js"></script>
+    <script defer src="database.js"></script>
+    <script defer src="router.js"></script>
+    <script defer src="modal.js"></script>
+    <script defer src="dashboard.js"></script>
+    <script defer src="app.js"></script>
 
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- SIDEBAR -->
+        <!-- SIDEBAR -->
 
-    <aside class="sidebar">
+        <aside class="sidebar">
 
-        <div class="seal-container">
+            <div class="seal-container">
 
-            <div class="seal-placeholder">
-                ERLC
-            </div>
-
-            <div class="brand">
-
-                <h2>ERLC Judicial</h2>
-
-                <p>Judge Operations Center</p>
-
-            </div>
-
-        </div>
-
-        <nav>
-
-            <button class="nav-btn active"
-                    data-page="dashboard">
-
-                Dashboard
-
-            </button>
-
-            <button class="nav-btn"
-                    data-page="cases">
-
-                Cases
-
-            </button>
-
-            <button class="nav-btn"
-                    data-page="courtroom">
-
-                Courtroom
-
-            </button>
-
-            <button class="nav-btn"
-                    data-page="records">
-
-                Records
-
-            </button>
-
-        </nav>
-
-    </aside>
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-        <!-- HEADER -->
-
-        <header class="header">
-
-            <div class="header-left">
-
-                <h1>
-                    ERLC Judicial Management System
-                </h1>
-
-                <span>
-                    Judge Operations Center
-                </span>
-
-            </div>
-
-            <div class="header-center">
-
-                <input
-                    id="globalSearch"
-                    type="text"
-                    placeholder="Search Cases, Defendants, Officers, Hearings">
-
-            </div>
-
-            <div class="header-right">
-
-                <div id="currentTime">
-                    Loading...
+                <div class="seal-placeholder">
+                    ERLC
                 </div>
 
-                <div class="activity-indicator">
+                <div class="brand">
 
-                    ACTIVE
+                    <h2>ERLC Judicial</h2>
+
+                    <p>Judge Operations Center</p>
 
                 </div>
 
             </div>
 
-        </header>
+            <nav>
 
-        <!-- DASHBOARD -->
-
-        <section
-            id="dashboardPage"
-            class="page active">
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <h3>Open Cases</h3>
-
-                    <p id="openCases">0</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <h3>Pending Hearings</h3>
-
-                    <p id="pendingHearings">0</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <h3>Closed Cases</h3>
-
-                    <p id="closedCases">0</p>
-
-                </div>
-
-                <div class="stat-card">
-
-                    <h3>Active Defendants</h3>
-
-                    <p id="activeDefendants">0</p>
-
-                </div>
-
-            </div>
-
-            <!-- COMMAND CENTER -->
-
-            <div class="command-grid">
-
-                <button class="command-btn">
-
-                    CREATE CASE
-
+                <button class="nav-btn active" data-page="dashboard">
+                    Dashboard
                 </button>
 
-                <button class="command-btn">
-
-                    OPEN COURT
-
+                <button class="nav-btn" data-page="cases">
+                    Cases
                 </button>
 
-                <button class="command-btn">
-
-                    FIND DEFENDANT
-
+                <button class="nav-btn" data-page="courtroom">
+                    Courtroom
                 </button>
 
-                <button class="command-btn">
-
-                    RECORDS
-
+                <button class="nav-btn" data-page="records">
+                    Records
                 </button>
 
-            </div>
+            </nav>
 
-            <!-- PANELS -->
+        </aside>
 
-            <div class="panel-grid">
+        <!-- MAIN CONTENT -->
 
-                <div class="panel">
+        <main class="main">
 
-                    <h2>Recent Activity</h2>
+            <!-- HEADER -->
 
-                    <div id="activityFeed">
+            <header class="header">
 
-                        No activity recorded.
+                <div class="header-left">
+
+                    <h1>ERLC Judicial Management System</h1>
+
+                    <span>
+                        Judge Operations Center
+                    </span>
+
+                </div>
+
+                <div class="header-center">
+
+                    <input
+                        type="text"
+                        id="globalSearch"
+                        placeholder="Search Cases, Defendants, Officers, Hearings">
+
+                </div>
+
+                <div class="header-right">
+
+                    <div id="currentTime">
+                        Loading...
+                    </div>
+
+                    <div class="activity-indicator">
+                        ACTIVE
+                    </div>
+
+                </div>
+
+            </header>
+
+            <!-- DASHBOARD -->
+
+            <section id="dashboardPage" class="page active">
+
+                <div class="stats-grid">
+
+                    <div class="stat-card">
+
+                        <h3>Open Cases</h3>
+
+                        <p id="openCases">0</p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Pending Hearings</h3>
+
+                        <p id="pendingHearings">0</p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Closed Cases</h3>
+
+                        <p id="closedCases">0</p>
+
+                    </div>
+
+                    <div class="stat-card">
+
+                        <h3>Active Defendants</h3>
+
+                        <p id="activeDefendants">0</p>
 
                     </div>
 
                 </div>
 
-                <div class="panel">
+                <div class="command-grid">
 
-                    <h2>Today's Docket</h2>
+                    <button class="command-btn" id="createCaseBtn">
+                        CREATE CASE
+                    </button>
 
-                    <div id="todayDocket">
+                    <button class="command-btn" id="openCourtBtn">
+                        OPEN COURT
+                    </button>
 
-                        No hearings scheduled.
+                    <button class="command-btn" id="findDefendantBtn">
+                        FIND DEFENDANT
+                    </button>
+
+                    <button class="command-btn" id="recordsBtn">
+                        RECORDS
+                    </button>
+
+                </div>
+
+                <div class="panel-grid">
+
+                    <div class="panel">
+
+                        <h2>Recent Activity</h2>
+
+                        <div id="activityFeed">
+
+                            No activity recorded.
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel">
+
+                        <h2>Today's Docket</h2>
+
+                        <div id="todayDocket">
+
+                            No hearings scheduled.
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel">
+
+                        <h2>Case Overview</h2>
+
+                        <div id="caseOverview">
+
+                            Select a case to view details.
+
+                        </div>
 
                     </div>
 
                 </div>
 
+            </section>
+
+            <!-- CASES -->
+
+            <section id="casesPage" class="page">
+
+                <h1>Case Management</h1>
+
+                <br>
+
+                <button class="command-btn" id="newCaseBtn">
+                    CREATE NEW CASE
+                </button>
+
+                <br><br>
+
                 <div class="panel">
 
-                    <h2>Case Overview</h2>
+                    <h2>Cases Database</h2>
 
-                    <div id="caseOverview">
+                    <div id="casesTable">
 
-                        Select a case to view details.
+                        No cases available.
 
                     </div>
 
                 </div>
 
-            </div>
+            </section>
 
-        </section>
+            <!-- COURTROOM -->
 
-        <!-- PLACEHOLDERS -->
+            <section id="courtroomPage" class="page">
 
-        <section
-            id="casesPage"
-            class="page">
+                <h1>Courtroom</h1>
 
-            <h1>Cases Module Coming In Build 2</h1>
+                <br>
 
-        </section>
+                <div class="panel">
 
-        <section
-            id="courtroomPage"
-            class="page">
+                    <h2>Courtroom Preview</h2>
 
-            <h1>Courtroom Module Coming In Build 3</h1>
+                    <div id="courtroomPreview">
 
-        </section>
+                        Select a case to begin.
 
-        <section
-            id="recordsPage"
-            class="page">
+                    </div>
 
-            <h1>Records Module Coming In Build 3</h1>
+                </div>
 
-        </section>
+            </section>
 
-    </main>
+            <!-- RECORDS -->
 
-</div>
+            <section id="recordsPage" class="page">
 
-<div id="modalContainer"></div>
+                <h1>Records</h1>
+
+                <br>
+
+                <div class="panel">
+
+                    <h2>Archived Records</h2>
+
+                    <div id="recordsContainer">
+
+                        No records available.
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- GLOBAL MODAL -->
+
+    <div id="modalContainer"></div>
 
 </body>
+
 </html>
