@@ -1,5 +1,20 @@
+const Storage = {
 
-const Storage={
-get(k){return JSON.parse(localStorage.getItem(k)||'[]')},
-set(k,v){localStorage.setItem(k,JSON.stringify(v))}
-}
+    get(key) {
+        return JSON.parse(
+            localStorage.getItem(key)
+        ) || [];
+    },
+
+    set(key, value) {
+        localStorage.setItem(
+            key,
+            JSON.stringify(value)
+        );
+    },
+
+    remove(key) {
+        localStorage.removeItem(key);
+    }
+
+};
