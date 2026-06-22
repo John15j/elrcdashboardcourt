@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Match Intelligence — WC26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/match.css">
+</head>
+<body data-page="match">
+
+  <header class="mini-topbar">
+    <a href="index.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Match Finder
+    </a>
+    <span class="mini-brand">WC26</span>
+  </header>
+
+  <main class="page">
+
+    <!-- ============ SECTION 1 — MATCH HEADER ============ -->
+    <section class="match-hero" id="matchHero">
+      <div class="hero-meta-row">
+        <span class="hero-tag" id="heroCompetition">FIFA World Cup 2026</span>
+        <span class="hero-tag" id="heroGroup">Group —</span>
+        <span class="hero-tag" id="heroStage">Group Stage</span>
+        <span class="hero-tag live-tag" id="heroLiveTag" hidden><span class="pulse-dot small"></span><span id="heroLiveTagText">LIVE</span></span>
+      </div>
+      <div class="hero-teams">
+        <div class="hero-team">
+          <img class="flag" id="heroHomeFlag" src="" alt="">
+          <span class="hero-team-name" id="heroHomeName">—</span>
+          <span class="standing-bubble" id="homeStandingBubble" hidden></span>
+        </div>
+        <div class="hero-score-block" id="heroScoreBlock">
+          <span class="hero-vs">vs</span>
+        </div>
+        <div class="hero-team">
+          <img class="flag" id="heroAwayFlag" src="" alt="">
+          <span class="hero-team-name" id="heroAwayName">—</span>
+          <span class="standing-bubble" id="awayStandingBubble" hidden></span>
+        </div>
+      </div>
+      <div class="hero-info-row">
+        <span>🏟 <b id="heroStadium">—</b></span>
+        <span>🧑‍⚖️ <b id="heroReferee">—</b></span>
+        <span>📅 <b id="heroDate">—</b></span>
+        <span class="info-chip-wrap">
+          <button class="info-chip" id="standingsInfoBtn" type="button" aria-expanded="false">P · W · D · L · Pts <span class="info-icon">ⓘ</span></button>
+          <div class="info-tooltip" id="standingsTooltip" hidden>
+            <b>P</b> Played &nbsp;·&nbsp; <b>W</b> Won &nbsp;·&nbsp; <b>D</b> Drawn &nbsp;·&nbsp; <b>L</b> Lost &nbsp;·&nbsp; <b>Pts</b> Points
+            <div class="info-tooltip-note">Group table shown is current sample data — will auto-update once a live standings API is connected.</div>
+          </div>
+        </span>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 2 — COUNTDOWN / STATUS ============ -->
+    <section class="status-bar" id="statusBar"></section>
+
+    <!-- ============ SECTIONS 3, 4, 5 ============ -->
+    <div class="content-main">
+
+      <!-- SECTION 3 — AI MATCH SUMMARY -->
+      <div class="panel" id="panelAiSummary">
+        <div class="panel-head"><h2>AI Match Summary</h2></div>
+        <p class="ai-summary-text" id="aiSummaryText">—</p>
+      </div>
+
+      <!-- FEATURE 1 — TEAM COMPARISON PANEL -->
+      <div class="panel" id="panelComparison">
+        <div class="panel-head">
+          <h2>📊 Team Comparison</h2>
+          <span class="sample-tag" id="comparisonSampleTag" hidden>Sample data</span>
+        </div>
+        <div id="comparisonContent"></div>
+      </div>
+
+      <!-- FEATURE 2 — MATCH RESEARCH TIMELINE -->
+      <div class="panel" id="panelTimeline">
+        <div class="panel-head">
+          <h2>📈 Last 10 Match Timeline</h2>
+          <span class="sample-tag" id="timelineSampleTag" hidden>Sample data</span>
+        </div>
+        <div id="timelineContent"></div>
+      </div>
+
+      <!-- SECTION 4 — LAST 5 MATCHES -->
+      <div class="panel" id="panelLastFive">
+        <div class="panel-head">
+          <h2>Last 5 Matches</h2>
+          <span class="sample-tag" id="lastFiveSampleTag" hidden>Sample data</span>
+        </div>
+        <div id="lastFiveContent"></div>
+      </div>
+
+      <!-- SECTION 5 — HEAD-TO-HEAD -->
+      <div class="panel" id="panelH2H">
+        <div class="panel-head">
+          <h2>Head-to-Head</h2>
+          <span class="sample-tag" id="h2hSampleTag" hidden>Sample data</span>
+        </div>
+        <div id="h2hContent"></div>
+      </div>
+
+    </div>
+
+    <!-- ============ SECTION 6 — LINEUPS ============ -->
+    <div class="panel panel-compact" id="panelLineups" style="margin-top:14px;">
+      <div class="panel-head"><h2>Lineups</h2></div>
+      <div id="lineupsContent">
+        <div class="lineups-head-row">
+          <span><span class="formation-tag" id="homeFormationTag">—</span></span>
+          <span><span class="formation-tag" id="awayFormationTag">—</span></span>
+        </div>
+        <div class="pitch" id="pitch"></div>
+        <div class="lineups-grid">
+          <div>
+            <div class="form-team-label">Subs — Home</div>
+            <div class="subs-row" id="subsHome">—</div>
+          </div>
+          <div>
+            <div class="form-team-label">Subs — Away</div>
+            <div class="subs-row" id="subsAway">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SECTION 9 — MARKET INTELLIGENCE ============ -->
+    <div class="panel" id="panelMarket" style="margin-top:14px;">
+      <div class="panel-head"><h2>Market Intelligence</h2></div>
+      <div class="market-grid">
+
+        <!-- Embedded chart area -->
+        <div class="embed-slot" id="marketEmbedSlot">
+          <!-- =====================================================
+               PASTE YOUR MARKET EMBED CODE HERE.
+               Delete the .embed-placeholder <div> below, then paste
+               any provider's <iframe ...></iframe> tag in its place.
+               This container is already responsive — width/height
+               are handled for you in match.css (.embed-slot iframe).
+               No provider is hardcoded; anything that embeds via
+               iframe will work here.
+          ===================================================== -->
+          <div class="embed-placeholder" id="marketEmbedPlaceholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            No market chart embedded yet.<br>Paste an iframe embed code here.
+            <code>&lt;iframe src="..."&gt;&lt;/iframe&gt;</code>
+          </div>
+        </div>
+
+        <div class="market-side">
+          <!-- Market summary card -->
+          <div class="panel" id="panelMarketSummary" style="margin:0;">
+            <div class="panel-head"><h2 style="font-size:13px;">Market Summary</h2></div>
+            <div id="marketSummaryContent"></div>
+          </div>
+
+          <!-- AI-generated market insight card -->
+          <div class="panel" id="panelMarketInsight" style="margin:0;">
+            <div class="panel-head"><h2 style="font-size:13px;">AI Market Insight</h2></div>
+            <div id="marketInsightContent"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ============ SECTION 8 — FLOATING AI ASSISTANT ============ -->
+  <button class="assistant-fab" id="assistantFab" aria-label="Open AI Assistant" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a7 7 0 0 0-7 7v3a3 3 0 0 0-1 2.236V18a1 1 0 0 0 1 1h1a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3h1a1 1 0 0 0 1-1v-3.764A3 3 0 0 0 19 12V9a7 7 0 0 0-7-7Z"/><circle cx="9" cy="11" r="1"/><circle cx="15" cy="11" r="1"/></svg>
+  </button>
+  <div class="assistant-panel" id="assistantPanel">
+    <div class="assistant-head">AI Assistant</div>
+    <div class="assistant-body">
+      <div class="assistant-questions" id="assistantQuestions"></div>
+      <div id="assistantAnswer"></div>
+    </div>
+  </div>
+
+  <script src="js/home.js"></script>
+  <script src="js/match.js"></script>
+</body>
+</html>

@@ -3,541 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GFBI — Greenville Federal Bureau of Investigation</title>
-<link rel="stylesheet" href="style.css">
+<title>WC26 Match Intel — Find a Match</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/home.css">
 </head>
-<body>
+<body data-page="home">
 
-<!-- HEADER -->
-<header class="top-bar">
-
-    <div class="header-left">
-        <div class="fbi-badge">
-            <span>🏛</span>
-        </div>
-        <div class="system-branding">
-            <h1>GFBI</h1>
-            <span>Greenville Federal Bureau of Investigation</span>
-        </div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">WC26</span>
+      <span class="brand-sub">Match Intel</span>
     </div>
-
-    <div class="header-center">
-        <div id="clock">00:00:00</div>
-        <div class="dashboard-label">Federal Operations Center</div>
-    </div>
-
-    <div class="header-right">
-        <div class="agent-card">
-            <div class="agent-rank">Special Agent</div>
-            <div class="agent-name">Agent Andrade</div>
-            <div class="agent-badge">Badge #00421</div>
-        </div>
-    </div>
-
-</header>
-
-<!-- NAV -->
-<nav class="main-nav">
-    <button class="nav-btn active" onclick="showPage('dashboard')">
-        🏠 Dashboard
-    </button>
-    <button class="nav-btn" onclick="showPage('suspects')">
-        👤 Suspects
-    </button>
-    <button class="nav-btn" onclick="showPage('cases')">
-        📁 Cases
-    </button>
-    <button class="nav-btn" onclick="showPage('agents')">
-        🪪 Agents
-    </button>
-</nav>
-
-<!-- ================================================= -->
-<!-- DASHBOARD PAGE -->
-<!-- ================================================= -->
-<div id="page-dashboard" class="page active">
-
-    <div class="page-hero">
-        <h2>Federal Operations Dashboard</h2>
-        <p>Greenville Division — Active Operations Center</p>
-        <div class="hero-badges">
-            <span class="hero-badge green">🟢 Systems Online</span>
-            <span class="hero-badge blue">🏛 GFBI Division</span>
-            <span class="hero-badge yellow">⚡ Live Feed</span>
-        </div>
-    </div>
-
-    <div class="stats-row">
-        <div class="stat-card">
-            <div class="stat-icon">👤</div>
-            <div class="stat-info">
-                <div id="statSuspects" class="stat-number">0</div>
-                <div class="stat-label">Total Suspects</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">📁</div>
-            <div class="stat-info">
-                <div id="statCases" class="stat-number">0</div>
-                <div class="stat-label">Total Cases</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">🔴</div>
-            <div class="stat-info">
-                <div id="statActive" class="stat-number">0</div>
-                <div class="stat-label">Active Cases</div>
-            </div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon">⚠</div>
-            <div class="stat-info">
-                <div id="statHighThreat" class="stat-number">0</div>
-                <div class="stat-label">High Threat Suspects</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="dashboard-grid">
-
-        <div class="db-panel">
-            <div class="panel-header">Quick Actions</div>
-            <div class="quick-actions">
-                <button class="qa-btn" onclick="openPopup('addSuspect')">
-                    <span>👤</span>
-                    <p>Add Suspect</p>
-                </button>
-                <button class="qa-btn" onclick="openPopup('addCase')">
-                    <span>📁</span>
-                    <p>New Case</p>
-                </button>
-                <button class="qa-btn" onclick="showPage('suspects')">
-                    <span>🔍</span>
-                    <p>Search DB</p>
-                </button>
-                <button class="qa-btn" onclick="showPage('cases')">
-                    <span>📊</span>
-                    <p>All Cases</p>
-                </button>
-            </div>
-        </div>
-
-        <div class="db-panel">
-            <div class="panel-header">Recent Activity</div>
-            <div id="activityFeed">
-                <div class="feed-empty">No recent activity.</div>
-            </div>
-        </div>
-
-        <div class="db-panel">
-            <div class="panel-header">Recent Suspects</div>
-            <div id="recentSuspects">
-                <div class="feed-empty">No suspects on file.</div>
-            </div>
-        </div>
-
-        <div class="db-panel">
-            <div class="panel-header">Active Cases</div>
-            <div id="activeCasesFeed">
-                <div class="feed-empty">No active cases.</div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- SUSPECTS PAGE -->
-<!-- ================================================= -->
-<div id="page-suspects" class="page hidden">
-
-    <div class="page-toolbar">
-        <h2>Suspects Database</h2>
-        <div class="toolbar-right">
-            <input id="suspectSearch" placeholder="Search suspects..." oninput="renderSuspects()">
-            <select id="suspectFilter" onchange="renderSuspects()">
-                <option value="all">All Threat Levels</option>
-                <option value="LOW">Low</option>
-                <option value="MEDIUM">Medium</option>
-                <option value="HIGH">High</option>
-                <option value="EXTREME">Extreme</option>
-            </select>
-            <button class="action-btn" onclick="openPopup('addSuspect')">+ Add Suspect</button>
-        </div>
-    </div>
-
-    <div id="suspectGrid" class="suspect-grid"></div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- CASES PAGE -->
-<!-- ================================================= -->
-<div id="page-cases" class="page hidden">
-
-    <div class="page-toolbar">
-        <h2>Cases Database</h2>
-        <div class="toolbar-right">
-            <input id="caseSearch" placeholder="Search cases..." oninput="renderCases()">
-            <select id="caseFilter" onchange="renderCases()">
-                <option value="all">All Statuses</option>
-                <option value="OPEN">Open</option>
-                <option value="ACTIVE">Active</option>
-                <option value="CLOSED">Closed</option>
-                <option value="COLD">Cold Case</option>
-            </select>
-            <button class="action-btn" onclick="openPopup('addCase')">+ New Case</button>
-        </div>
-    </div>
-
-    <div id="caseGrid" class="case-grid"></div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- AGENTS PAGE -->
-<!-- ================================================= -->
-<div id="page-agents" class="page hidden">
-
-    <div class="page-toolbar">
-        <h2>Agent Panel</h2>
-    </div>
-
-    <div class="agent-profile-card">
-
-        <div class="agent-profile-left">
-            <div class="agent-avatar">🪪</div>
-            <div class="agent-profile-name">Agent Andrade</div>
-            <div class="agent-profile-rank">Special Agent</div>
-            <div class="agent-profile-badge">Badge #00421</div>
-            <div class="agent-status-badge">● Active Duty</div>
-        </div>
-
-        <div class="agent-profile-right">
-            <div class="agent-stat-grid">
-                <div class="agent-stat">
-                    <div id="agentCases" class="agent-stat-num">0</div>
-                    <div class="agent-stat-label">Cases Filed</div>
-                </div>
-                <div class="agent-stat">
-                    <div id="agentSuspects" class="agent-stat-num">0</div>
-                    <div class="agent-stat-label">Suspects Added</div>
-                </div>
-                <div class="agent-stat">
-                    <div id="agentClosed" class="agent-stat-num">0</div>
-                    <div class="agent-stat-label">Cases Closed</div>
-                </div>
-                <div class="agent-stat">
-                    <div id="agentActive" class="agent-stat-num">0</div>
-                    <div class="agent-stat-label">Active Cases</div>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- SUSPECT PROFILE PAGE -->
-<!-- ================================================= -->
-<div id="page-suspectProfile" class="page hidden">
-
-    <div class="page-toolbar">
-        <button class="back-btn" onclick="showPage('suspects')">← Back</button>
-        <h2 id="profileName">Suspect Profile</h2>
-        <div class="toolbar-right">
-            <button class="action-btn" onclick="editCurrentSuspect()">✏ Edit</button>
-            <button class="action-btn danger-btn" onclick="deleteCurrentSuspect()">🗑 Delete</button>
-        </div>
-    </div>
-
-    <div class="profile-grid">
-
-        <div class="profile-left">
-            <div class="profile-photo">
-                <div class="photo-placeholder">👤</div>
-            </div>
-            <div class="profile-id-card">
-                <div class="pid-label">SUSPECT ID</div>
-                <div id="profileId" class="pid-value">—</div>
-                <div class="pid-label">THREAT LEVEL</div>
-                <div id="profileThreat" class="threat-badge">—</div>
-                <div class="pid-label">STATUS</div>
-                <div id="profileStatus" class="pid-value">—</div>
-            </div>
-        </div>
-
-        <div class="profile-right">
-
-            <div class="profile-section">
-                <div class="profile-section-title">Personal Information</div>
-                <div class="profile-fields">
-                    <div class="profile-field">
-                        <div class="pf-label">Full Name</div>
-                        <div id="profileFullName" class="pf-value">—</div>
-                    </div>
-                    <div class="profile-field">
-                        <div class="pf-label">Username</div>
-                        <div id="profileUsername" class="pf-value">—</div>
-                    </div>
-                    <div class="profile-field">
-                        <div class="pf-label">Age</div>
-                        <div id="profileAge" class="pf-value">—</div>
-                    </div>
-                    <div class="profile-field">
-                        <div class="pf-label">Known Address</div>
-                        <div id="profileAddress" class="pf-value">—</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Criminal Record</div>
-                <div id="profileCharges" class="profile-text">—</div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Notes</div>
-                <div id="profileNotes" class="profile-text">—</div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Linked Cases</div>
-                <div id="profileLinkedCases" class="linked-list">—</div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- CASE FILE PAGE -->
-<!-- ================================================= -->
-<div id="page-caseFile" class="page hidden">
-
-    <div class="page-toolbar">
-        <button class="back-btn" onclick="showPage('cases')">← Back</button>
-        <h2 id="caseFileName">Case File</h2>
-        <div class="toolbar-right">
-            <button class="action-btn" onclick="editCurrentCase()">✏ Edit</button>
-            <button class="action-btn danger-btn" onclick="deleteCurrentCase()">🗑 Delete</button>
-        </div>
-    </div>
-
-    <div class="case-file-grid">
-
-        <div class="case-file-left">
-
-            <div class="case-info-card">
-                <div class="pid-label">CASE ID</div>
-                <div id="caseFileId" class="pid-value">—</div>
-                <div class="pid-label">STATUS</div>
-                <div id="caseFileStatus" class="case-status-badge">—</div>
-                <div class="pid-label">PRIORITY</div>
-                <div id="caseFilePriority" class="pid-value">—</div>
-                <div class="pid-label">DATE OPENED</div>
-                <div id="caseFileDate" class="pid-value">—</div>
-            </div>
-
-            <div class="case-status-controls">
-                <div class="pid-label">CHANGE STATUS</div>
-                <div class="status-pills">
-                    <button class="status-pill open-pill" onclick="updateCaseStatus('OPEN')">Open</button>
-                    <button class="status-pill active-pill2" onclick="updateCaseStatus('ACTIVE')">Active</button>
-                    <button class="status-pill closed-pill2" onclick="updateCaseStatus('CLOSED')">Closed</button>
-                    <button class="status-pill cold-pill" onclick="updateCaseStatus('COLD')">Cold Case</button>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="case-file-right">
-
-            <div class="profile-section">
-                <div class="profile-section-title">Case Overview</div>
-                <div class="profile-fields">
-                    <div class="profile-field">
-                        <div class="pf-label">Title</div>
-                        <div id="caseFileTitle" class="pf-value">—</div>
-                    </div>
-                    <div class="profile-field">
-                        <div class="pf-label">Lead Agent</div>
-                        <div id="caseFileAgent" class="pf-value">—</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Description</div>
-                <div id="caseFileDesc" class="profile-text">—</div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Linked Suspects</div>
-                <div id="caseFileLinkedSuspects" class="linked-list">—</div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Evidence</div>
-                <div id="caseFileEvidence" class="profile-text">—</div>
-            </div>
-
-            <div class="profile-section">
-                <div class="profile-section-title">Case Notes</div>
-                <div id="caseFileNotes" class="profile-text">—</div>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================================================= -->
-<!-- POPUPS -->
-<!-- ================================================= -->
-
-<!-- ADD SUSPECT -->
-<div id="popup-addSuspect" class="popup-overlay hidden">
-    <div class="popup-box">
-        <div class="popup-header">
-            <h3>Add Suspect</h3>
-            <button onclick="closePopup('addSuspect')">✕</button>
-        </div>
-        <div class="popup-body">
-            <input id="sName" placeholder="Full Name *">
-            <input id="sUsername" placeholder="Username *">
-            <input id="sAge" placeholder="Age">
-            <input id="sAddress" placeholder="Known Address">
-            <select id="sThreat">
-                <option value="LOW">Low Threat</option>
-                <option value="MEDIUM">Medium Threat</option>
-                <option value="HIGH">High Threat</option>
-                <option value="EXTREME">Extreme Threat</option>
-            </select>
-            <select id="sStatus">
-                <option value="AT LARGE">At Large</option>
-                <option value="IN CUSTODY">In Custody</option>
-                <option value="WANTED">Wanted</option>
-                <option value="CLEARED">Cleared</option>
-            </select>
-            <textarea id="sCharges" placeholder="Known Charges"></textarea>
-            <textarea id="sNotes" placeholder="Agent Notes"></textarea>
-        </div>
-        <div class="popup-footer">
-            <button class="popup-btn" onclick="saveSuspect()">Save Suspect</button>
-            <button class="popup-btn secondary" onclick="closePopup('addSuspect')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- ADD CASE -->
-<div id="popup-addCase" class="popup-overlay hidden">
-    <div class="popup-box">
-        <div class="popup-header">
-            <h3>New Case</h3>
-            <button onclick="closePopup('addCase')">✕</button>
-        </div>
-        <div class="popup-body">
-            <input id="cTitle" placeholder="Case Title *">
-            <input id="cAgent" placeholder="Lead Agent">
-            <select id="cStatus">
-                <option value="OPEN">Open</option>
-                <option value="ACTIVE">Active</option>
-            </select>
-            <select id="cPriority">
-                <option value="LOW">Low Priority</option>
-                <option value="MEDIUM">Medium Priority</option>
-                <option value="HIGH">High Priority</option>
-                <option value="CRITICAL">Critical</option>
-            </select>
-            <textarea id="cDesc" placeholder="Case Description"></textarea>
-            <textarea id="cEvidence" placeholder="Initial Evidence"></textarea>
-            <textarea id="cNotes" placeholder="Case Notes"></textarea>
-        </div>
-        <div class="popup-footer">
-            <button class="popup-btn" onclick="saveCase()">Save Case</button>
-            <button class="popup-btn secondary" onclick="closePopup('addCase')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- EDIT SUSPECT -->
-<div id="popup-editSuspect" class="popup-overlay hidden">
-    <div class="popup-box">
-        <div class="popup-header">
-            <h3>Edit Suspect</h3>
-            <button onclick="closePopup('editSuspect')">✕</button>
-        </div>
-        <div class="popup-body">
-            <input id="esName" placeholder="Full Name *">
-            <input id="esUsername" placeholder="Username *">
-            <input id="esAge" placeholder="Age">
-            <input id="esAddress" placeholder="Known Address">
-            <select id="esThreat">
-                <option value="LOW">Low Threat</option>
-                <option value="MEDIUM">Medium Threat</option>
-                <option value="HIGH">High Threat</option>
-                <option value="EXTREME">Extreme Threat</option>
-            </select>
-            <select id="esStatus">
-                <option value="AT LARGE">At Large</option>
-                <option value="IN CUSTODY">In Custody</option>
-                <option value="WANTED">Wanted</option>
-                <option value="CLEARED">Cleared</option>
-            </select>
-            <textarea id="esCharges" placeholder="Known Charges"></textarea>
-            <textarea id="esNotes" placeholder="Agent Notes"></textarea>
-        </div>
-        <div class="popup-footer">
-            <button class="popup-btn" onclick="updateSuspect()">Save Changes</button>
-            <button class="popup-btn secondary" onclick="closePopup('editSuspect')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<!-- EDIT CASE -->
-<div id="popup-editCase" class="popup-overlay hidden">
-    <div class="popup-box">
-        <div class="popup-header">
-            <h3>Edit Case</h3>
-            <button onclick="closePopup('editCase')">✕</button>
-        </div>
-        <div class="popup-body">
-            <input id="ecTitle" placeholder="Case Title *">
-            <input id="ecAgent" placeholder="Lead Agent">
-            <select id="ecStatus">
-                <option value="OPEN">Open</option>
-                <option value="ACTIVE">Active</option>
-                <option value="CLOSED">Closed</option>
-                <option value="COLD">Cold Case</option>
-            </select>
-            <select id="ecPriority">
-                <option value="LOW">Low Priority</option>
-                <option value="MEDIUM">Medium Priority</option>
-                <option value="HIGH">High Priority</option>
-                <option value="CRITICAL">Critical</option>
-            </select>
-            <textarea id="ecDesc" placeholder="Case Description"></textarea>
-            <textarea id="ecEvidence" placeholder="Evidence"></textarea>
-            <textarea id="ecNotes" placeholder="Case Notes"></textarea>
-        </div>
-        <div class="popup-footer">
-            <button class="popup-btn" onclick="updateCase()">Save Changes</button>
-            <button class="popup-btn secondary" onclick="closePopup('editCase')">Cancel</button>
-        </div>
-    </div>
-</div>
-
-<footer class="footer">
-    <div>GFBI — Greenville Federal Bureau of Investigation</div>
-    <div>Federal Operations Database — Restricted Access</div>
-</footer>
-
-<script src="app.js"></script>
+    <p class="tagline">Find a match. Open it. See everything.</p>
+  </header>
+
+  <!-- Live ticker strip: only populated by JS when live matches exist -->
+  <div id="liveTicker" class="live-ticker" hidden>
+    <span class="ticker-label"><span class="pulse-dot"></span>LIVE</span>
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
+
+  <main class="page">
+
+    <section class="finder-bar">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search team, group, or stage…" autocomplete="off">
+      </div>
+      <div class="filter-pills" id="filterPills">
+        <button class="pill active" data-filter="all">All</button>
+        <button class="pill" data-filter="live">Live</button>
+        <button class="pill" data-filter="upcoming">Upcoming</button>
+        <button class="pill" data-filter="recent">Recent</button>
+      </div>
+    </section>
+
+    <section class="match-section" id="liveSection">
+      <div class="section-head">
+        <h2><span class="pulse-dot small"></span>Live Matches</h2>
+        <span class="section-count" id="liveCount">0</span>
+      </div>
+      <div class="match-grid" id="liveGrid"></div>
+    </section>
+
+    <section class="match-section" id="upcomingSection">
+      <div class="section-head">
+        <h2>Upcoming Matches</h2>
+        <span class="section-count" id="upcomingCount">0</span>
+      </div>
+      <div class="match-grid" id="upcomingGrid"></div>
+    </section>
+
+    <section class="match-section" id="recentSection">
+      <div class="section-head">
+        <h2>🗂 Recent Matches</h2>
+        <span class="section-count" id="recentCount">0</span>
+      </div>
+      <div class="match-grid" id="recentGrid"></div>
+    </section>
+
+    <p class="empty-state" id="emptyState" hidden>No matches found. Try a different team, group, or stage.</p>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>FIFA World Cup Match Intelligence — Version 1</span>
+    <span class="footer-dim">Personal research project · sample data, not an official source</span>
+  </footer>
+
+  <script src="js/home.js"></script>
 </body>
 </html>
