@@ -3,75 +3,133 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WC26 Match Intel — Find a Match</title>
+<title>WorldCupIQ — Powered by CupIQ™</title>
+<meta name="description" content="WorldCupIQ — football intelligence terminal for World Cup match research, AI insights, and market intelligence.">
+<link rel="icon" href="assets/logo-mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/home.css">
 </head>
-<body data-page="home">
+<body>
 
-  <header class="topbar">
-    <div class="brand">
-      <span class="brand-mark">WC26</span>
-      <span class="brand-sub">Match Intel</span>
+<!-- ============================================================ HEADER ============================================================ -->
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" id="logoHome" href="index.html" aria-label="WorldCupIQ home">
+      <img src="assets/logo-lockup.png" alt="WorldCupIQ — Powered by CupIQ">
+    </a>
+    <div class="global-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search teams, matches, markets…" id="searchInput" aria-label="Search">
     </div>
-    <p class="tagline">Find a match. Open it. See everything.</p>
-  </header>
+    <div class="header-actions">
+      <button class="icon-btn" id="navSaved" aria-label="Saved research">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        <span>Saved Research</span><span class="count" id="savedCount">2</span>
+      </button>
+      <button class="icon-btn" id="navSettings" aria-label="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </button>
+    </div>
+  </div>
+</header>
 
-  <!-- Live ticker strip: only populated by JS when live matches exist -->
-  <div id="liveTicker" class="live-ticker" hidden>
-    <span class="ticker-label"><span class="pulse-dot"></span>LIVE</span>
-    <div class="ticker-track" id="tickerTrack"></div>
+<main>
+  <!-- HERO -->
+  <div class="wrap hero">
+    <div class="hero-eyebrow"><span class="live-dot"></span> Live · Matchday Intelligence</div>
+    <h1>Football research,<br><span class="accent">priced like a market.</span></h1>
+    <p>Match trends, tactical analysis and probability data for every World Cup fixture — read like a terminal, not a tip sheet.</p>
+    <div class="ticker-shell">
+      <div class="ticker-track" id="heroTicker"></div>
+    </div>
   </div>
 
-  <main class="page">
-
-    <section class="finder-bar">
-      <div class="search-wrap">
-        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Search team, group, or stage…" autocomplete="off">
+  <!-- 1. LIVE MATCHES -->
+  <section class="module wrap" id="section-live">
+    <div class="module-head">
+      <div class="module-head-left">
+        <span class="module-eyebrow">01</span>
+        <h2 class="module-title">Live Matches</h2>
       </div>
-      <div class="filter-pills" id="filterPills">
-        <button class="pill active" data-filter="all">All</button>
-        <button class="pill" data-filter="live">Live</button>
-        <button class="pill" data-filter="upcoming">Upcoming</button>
-        <button class="pill" data-filter="recent">Recent</button>
+      <a class="module-link" href="#">All live <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="module-divider"></div>
+    <div class="grid-2" id="liveMatches"></div>
+  </section>
+
+  <!-- 2. MARKET MOVERS -->
+  <section class="module wrap" id="section-movers">
+    <div class="module-head">
+      <div class="module-head-left">
+        <span class="module-eyebrow">02</span>
+        <h2 class="module-title">Market Movers</h2>
       </div>
-    </section>
+      <a class="module-link" href="#">Full board <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="module-divider"></div>
+    <div class="movers-row" id="marketMovers"></div>
+  </section>
 
-    <section class="match-section" id="liveSection">
-      <div class="section-head">
-        <h2><span class="pulse-dot small"></span>Live Matches</h2>
-        <span class="section-count" id="liveCount">0</span>
+  <!-- 3. UPCOMING MATCHES -->
+  <section class="module wrap" id="section-upcoming">
+    <div class="module-head">
+      <div class="module-head-left">
+        <span class="module-eyebrow">03</span>
+        <h2 class="module-title">Upcoming Matches</h2>
       </div>
-      <div class="match-grid" id="liveGrid"></div>
-    </section>
+      <a class="module-link" href="#">Full schedule <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="module-divider"></div>
+    <div class="grid-2" id="upcomingMatches"></div>
+  </section>
 
-    <section class="match-section" id="upcomingSection">
-      <div class="section-head">
-        <h2>Upcoming Matches</h2>
-        <span class="section-count" id="upcomingCount">0</span>
+  <!-- 4. SAVED RESEARCH -->
+  <section class="module wrap" id="section-saved">
+    <div class="module-head">
+      <div class="module-head-left">
+        <span class="module-eyebrow">04</span>
+        <h2 class="module-title">Saved Research</h2>
       </div>
-      <div class="match-grid" id="upcomingGrid"></div>
-    </section>
+      <a class="module-link" href="#">Manage <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="module-divider"></div>
+    <div class="grid-2" id="savedMatches"></div>
+  </section>
 
-    <section class="match-section" id="recentSection">
-      <div class="section-head">
-        <h2>🗂 Recent Matches</h2>
-        <span class="section-count" id="recentCount">0</span>
+  <!-- 5. RECENT MATCHES -->
+  <section class="module wrap" id="section-recent">
+    <div class="module-head">
+      <div class="module-head-left">
+        <span class="module-eyebrow">05</span>
+        <h2 class="module-title">Recent Matches</h2>
       </div>
-      <div class="match-grid" id="recentGrid"></div>
-    </section>
+      <a class="module-link" href="#">Full results <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="module-divider"></div>
+    <div class="grid-2" id="recentMatches"></div>
+  </section>
+</main>
 
-    <p class="empty-state" id="emptyState" hidden>No matches found. Try a different team, group, or stage.</p>
+<!-- ============================================================ FOOTER ============================================================ -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="assets/logo-mark.png" alt="CupIQ">
+        <div>
+          <div style="font-family:var(--f-display);font-weight:600;font-size:14px;">WorldCupIQ</div>
+          <div class="footer-note">Football intelligence terminal — research, trends &amp; market data for the World Cup. Not a sportsbook.</div>
+        </div>
+      </div>
+      <div class="badge badge-gold" style="padding:7px 14px;">Powered by CupIQ™</div>
+    </div>
+    <div class="footer-disclaimer">All match data, scores, and percentages on this page are illustrative demo data for UI/UX purposes only.</div>
+  </div>
+</footer>
 
-  </main>
-
-  <footer class="site-footer">
-    <span>FIFA World Cup Match Intelligence — Version 1</span>
-    <span class="footer-dim">Personal research project · sample data, not an official source</span>
-  </footer>
-
-  <script src="js/home.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>

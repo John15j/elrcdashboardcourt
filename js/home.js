@@ -1,799 +1,415 @@
-"use strict";
+/* ============================================================
+   WORLDCUPIQ — HOME LOGIC
+   Static demo data only. No backend / API calls yet — this file
+   renders the UI exactly as it will behave once data is wired up.
+   ============================================================ */
 
-/* ================================================================
-   SHARED MATCH DATA
-   This array is the single source of truth for both pages.
-   match.html loads this file BEFORE match.js, so match.js can
-   read window.MATCH_DATA without duplicating it.
+/* ---------- TEAM DIRECTORY ---------- */
+const TEAMS = {
+  ARG:{name:'Argentina',flag:'🇦🇷'}, FRA:{name:'France',flag:'🇫🇷'},
+  BRA:{name:'Brazil',flag:'🇧🇷'},    NED:{name:'Netherlands',flag:'🇳🇱'},
+  USA:{name:'USA',flag:'🇺🇸'},       MEX:{name:'Mexico',flag:'🇲🇽'},
+  POR:{name:'Portugal',flag:'🇵🇹'},  MAR:{name:'Morocco',flag:'🇲🇦'},
+  CRO:{name:'Croatia',flag:'🇭🇷'},   GER:{name:'Germany',flag:'🇩🇪'},
+  JPN:{name:'Japan',flag:'🇯🇵'},     ESP:{name:'Spain',flag:'🇪🇸'},
+  COL:{name:'Colombia',flag:'🇨🇴'},  URU:{name:'Uruguay',flag:'🇺🇾'},
+  BEL:{name:'Belgium',flag:'🇧🇪'},   ITA:{name:'Italy',flag:'🇮🇹'},
+};
 
-   Seeded from real FIFA World Cup 2026 group-stage fixtures
-   (live scores / kickoff times are real). Stadium and referee
-   are placeholder sample values — swap in confirmed venues/
-   officials when you have them, the structure won't change.
+const now = Date.now();
+const hrs = h => now + h*3600*1000;
 
-   `hasFullIntel: true` marks the one match (England v Croatia)
-   that ships with complete sample data for every Match
-   Intelligence section (lineups, last-5 form, head-to-head).
-   Other matches render gracefully with "not yet available"
-   placeholders for those sections — see match.js.
-   ================================================================ */
-
-const MATCH_DATA = [
-  {
-    id: "eng-cro-2026",
-    status: "finished",
-    kickoff: "2026-06-17T20:00:00Z",
-    group: "L",
-    stage: "Group Stage",
-    stadium: "Lincoln Financial Field, Philadelphia",
-    referee: "Referee TBA",
-    home: { name: "England", code: "eng", flag: "gb-eng" },
-    away: { name: "Croatia", code: "cro", flag: "hr" },
-    score: { home: 4, away: 2 },
-    hasFullIntel: true,
-    /* Everything in `intel` below is real EXCEPT lastFive and h2h, which
-       have no public API source here and are clearly sample placeholders
-       (see `sample: true` flags) — swap them for a real history feed later. */
-    intel: {
-      aiSummary: "England controlled this one territorially, holding 54% possession and landing 12 shots on target to Croatia's five. The tie was level twice in the first half, but a goal either side of the break — in the 42nd and 47th minutes — broke Croatia's resistance, and a late strike in the 85th made the scoreline emphatic.",
-      keyEvents: [
-        { minute: 12, team: "home", type: "goal" },
-        { minute: 36, team: "away", type: "goal" },
-        { minute: 42, team: "home", type: "goal" },
-        { minute: 45, team: "away", type: "goal" },
-        { minute: 47, team: "home", type: "goal" },
-        { minute: 85, team: "home", type: "goal" }
-      ],
-      teamStats: {
-        home: { possession: 54, shotsTotal: 20, shotsOnTarget: 12, corners: 8, fouls: 10 },
-        away: { possession: 46, shotsTotal: 11, shotsOnTarget: 5, corners: 2, fouls: 11 }
-      },
-      lastFive: {
-        sample: true,
-        home: [
-          { opponent: "France", result: "W", score: "2-1" },
-          { opponent: "Brazil", result: "W", score: "3-1" },
-          { opponent: "Germany", result: "D", score: "1-1" },
-          { opponent: "Portugal", result: "W", score: "2-0" },
-          { opponent: "Netherlands", result: "W", score: "4-2" }
-        ],
-        away: [
-          { opponent: "Argentina", result: "L", score: "1-3" },
-          { opponent: "Belgium", result: "L", score: "0-2" },
-          { opponent: "Japan", result: "D", score: "2-2" },
-          { opponent: "Morocco", result: "L", score: "1-2" },
-          { opponent: "Serbia", result: "W", score: "2-1" }
-        ]
-      },
-      h2h: {
-        sample: true,
-        meetings: [
-          { line: "England 2–1 Croatia", competition: "Friendly", date: "Mar 2025" },
-          { line: "Croatia 1–0 England", competition: "Qualifier", date: "Oct 2024" },
-          { line: "England 1–1 Croatia", competition: "Group Stage", date: "Jun 2023" }
-        ]
-      },
-      lineups: {
-        home: {
-          formation: "4-3-3",
-          startingXI: [
-            { name: "Jordan Pickford", pos: "GK" },
-            { name: "Reece James", pos: "RB" },
-            { name: "John Stones", pos: "CB" },
-            { name: "Ezri Konsa", pos: "CB" },
-            { name: "Nico O'Reilly", pos: "LB" },
-            { name: "Declan Rice", pos: "CM" },
-            { name: "Jude Bellingham", pos: "CM" },
-            { name: "Elliot Anderson", pos: "CM" },
-            { name: "Noni Madueke", pos: "RW" },
-            { name: "Harry Kane", pos: "ST" },
-            { name: "Anthony Gordon", pos: "LW" }
-          ],
-          subs: ["James Trafford", "Djed Spence", "Kobbie Mainoo", "Morgan Rogers"]
-        },
-        away: {
-          formation: "4-4-2",
-          startingXI: [
-            { name: "Dominik Livakovic", pos: "GK" },
-            { name: "Josip Stanisic", pos: "RB" },
-            { name: "Josko Gvardiol", pos: "CB" },
-            { name: "Luka Vuskovic", pos: "CB" },
-            { name: "Josip Sutalo", pos: "LB" },
-            { name: "Martin Baturina", pos: "RM" },
-            { name: "Luka Modric", pos: "CM" },
-            { name: "Petar Sucic", pos: "CM" },
-            { name: "Mario Pasalic", pos: "LM" },
-            { name: "Ivan Perisic", pos: "ST" },
-            { name: "Petar Musa", pos: "ST" }
-          ],
-          subs: ["Luka Sucic", "Igor Matanovic", "Nikola Moro", "Ante Budimir"]
-        }
-      },
-      /* Feature 1 — Team Comparison Panel. No public FIFA-ranking/season-average
-         API is connected here, so this is sample data like lastFive/h2h above. */
-      comparison: {
-        sample: true,
-        fifaRanking: { home: 4, away: 12 },
-        recentForm: { home: "WWWDW", away: "WLDWD" },
-        avgGoals: { home: 2.1, away: 1.4 },
-        avgGoalsAllowed: { home: 0.8, away: 1.2 },
-        possession: { home: 58, away: 49 },
-        shotsPerMatch: { home: 15, away: 11 }
-      },
-      /* Feature 2 — Match Research Timeline. Same sample-data caveat as above. */
-      last10: {
-        sample: true,
-        home: ["W", "W", "D", "W", "L", "W", "W", "W", "D", "W"],
-        away: ["W", "L", "D", "W", "D", "W", "L", "W", "W", "D"]
-      }
-    }
-  },
-  {
-    id: "sco-mar-2026",
-    status: "finished",
-    kickoff: "2026-06-19T22:00:00Z",
-    group: "C",
-    stage: "Group Stage",
-    stadium: "BMO Field, Toronto",
-    referee: "Referee TBA",
-    home: { name: "Scotland", code: "sco", flag: "gb-sct" },
-    away: { name: "Morocco", code: "mar", flag: "ma" },
-    score: { home: 0, away: 1 },
-    hasFullIntel: true,
-    intel: {
-      aiSummary: "Morocco controlled this one from the second minute, taking an early lead and never letting go of the ball for long — 60% possession and 12 shots to Scotland's six. The most telling number: Scotland failed to register a single shot on target across the full 90 minutes, a sign of how comprehensively they were contained despite the narrow scoreline.",
-      keyEvents: [
-        { minute: 2, team: "away", type: "goal" }
-      ],
-      teamStats: {
-        home: { possession: 40, shotsTotal: 6, shotsOnTarget: 0, corners: 2, fouls: 11 },
-        away: { possession: 60, shotsTotal: 12, shotsOnTarget: 3, corners: 5, fouls: 8 }
-      },
-      comparison: {
-        sample: true,
-        fifaRanking: { home: 32, away: 13 },
-        recentForm: { home: "LDLWD", away: "WWDWW" },
-        avgGoals: { home: 1.1, away: 1.8 },
-        avgGoalsAllowed: { home: 1.6, away: 0.7 },
-        possession: { home: 45, away: 55 },
-        shotsPerMatch: { home: 9, away: 13 }
-      },
-      last10: {
-        sample: true,
-        home: ["L", "D", "L", "W", "D", "L", "D", "W", "L", "D"],
-        away: ["W", "W", "D", "W", "W", "D", "W", "L", "W", "W"]
-      },
-      lastFive: {
-        sample: true,
-        home: [
-          { opponent: "Norway", result: "L", score: "0-2" },
-          { opponent: "Iceland", result: "D", score: "1-1" },
-          { opponent: "Denmark", result: "L", score: "0-1" },
-          { opponent: "Israel", result: "W", score: "3-0" },
-          { opponent: "Georgia", result: "D", score: "1-1" }
-        ],
-        away: [
-          { opponent: "Senegal", result: "W", score: "2-0" },
-          { opponent: "Tunisia", result: "W", score: "1-0" },
-          { opponent: "Algeria", result: "D", score: "1-1" },
-          { opponent: "Egypt", result: "W", score: "2-1" },
-          { opponent: "Comoros", result: "W", score: "4-0" }
-        ]
-      },
-      h2h: {
-        sample: true,
-        meetings: [
-          { line: "Scotland 1–0 Morocco", competition: "Friendly", date: "Jun 2022" },
-          { line: "Morocco 2–1 Scotland", competition: "Friendly", date: "Mar 2019" }
-        ]
-      },
-      lineups: {
-        home: {
-          formation: "5-4-1",
-          startingXI: [
-            { name: "Angus Gunn", pos: "GK" },
-            { name: "Nathan Patterson", pos: "RB" },
-            { name: "Jack Hendry", pos: "CB" },
-            { name: "Grant Hanley", pos: "CB" },
-            { name: "Kieran Tierney", pos: "CB" },
-            { name: "Andy Robertson", pos: "LB" },
-            { name: "Ryan Christie", pos: "RM" },
-            { name: "Lewis Ferguson", pos: "CM" },
-            { name: "John McGinn", pos: "CM" },
-            { name: "Scott Mctominay", pos: "LM" },
-            { name: "Che Adams", pos: "ST" }
-          ],
-          subs: ["Ross Stewart", "Findlay Curtis", "Ben Gannon-Doak", "Tyler Fletcher"]
-        },
-        away: {
-          formation: "4-5-1",
-          startingXI: [
-            { name: "Yassine Bounou", pos: "GK" },
-            { name: "Achraf Hakimi", pos: "RB" },
-            { name: "Issa Diop", pos: "CB" },
-            { name: "Chadi Riad", pos: "CB" },
-            { name: "Noussair Mazraoui", pos: "LB" },
-            { name: "Neil El Aynaoui", pos: "CM" },
-            { name: "Ayyoub Bouaddi", pos: "CM" },
-            { name: "Azzedine Ounahi", pos: "CM" },
-            { name: "Bilal El Khannouss", pos: "RM" },
-            { name: "Ismael Saibari", pos: "LM" },
-            { name: "Brahim Diaz", pos: "RW" }
-          ],
-          subs: ["Chemsdine Talbi", "Ayoube Amaimouni", "Amine Sbai", "Redouane Halhal"]
-        }
-      }
-    }
-  },
-  {
-    id: "bra-hti-2026",
-    status: "finished",
-    kickoff: "2026-06-20T00:30:00Z",
-    group: "C",
-    stage: "Group Stage",
-    stadium: "Hard Rock Stadium, Miami",
-    referee: "Referee TBA",
-    home: { name: "Brazil", code: "bra", flag: "br" },
-    away: { name: "Haiti", code: "hti", flag: "ht" },
-    score: { home: 3, away: 0 },
-    hasFullIntel: true,
-    winProbability: { home: 87.9, away: 3.9, draw: 8.2 },
-    intel: {
-      aiSummary: "Brazil settled this one before halftime, scoring three times in a 22-minute spell (23rd, 36th, and 45th minutes) to put the game away early. To Haiti's credit, they matched Brazil's shot count almost evenly (8 to 9) and finished with four shots on target of their own — the scoreline reflects a ruthless finishing window more than a one-sided match throughout.",
-      keyEvents: [
-        { minute: 23, team: "home", type: "goal" },
-        { minute: 36, team: "home", type: "goal" },
-        { minute: 45, team: "home", type: "goal" }
-      ],
-      teamStats: {
-        home: { possession: 57, shotsTotal: 9, shotsOnTarget: 5, corners: 4, fouls: 13 },
-        away: { possession: 43, shotsTotal: 8, shotsOnTarget: 4, corners: 4, fouls: 15 }
-      },
-      comparison: {
-        sample: true,
-        fifaRanking: { home: 3, away: 86 },
-        recentForm: { home: "WWWWD", away: "LLDLW" },
-        avgGoals: { home: 2.6, away: 0.9 },
-        avgGoalsAllowed: { home: 0.6, away: 2.3 },
-        possession: { home: 61, away: 39 },
-        shotsPerMatch: { home: 17, away: 7 }
-      },
-      last10: {
-        sample: true,
-        home: ["W", "W", "W", "W", "D", "W", "W", "W", "D", "W"],
-        away: ["L", "L", "D", "L", "W", "L", "D", "L", "L", "D"]
-      },
-      lastFive: {
-        sample: true,
-        home: [
-          { opponent: "Argentina", result: "W", score: "2-1" },
-          { opponent: "Uruguay", result: "W", score: "3-0" },
-          { opponent: "Colombia", result: "W", score: "1-0" },
-          { opponent: "Peru", result: "D", score: "2-2" },
-          { opponent: "Chile", result: "W", score: "4-1" }
-        ],
-        away: [
-          { opponent: "Honduras", result: "L", score: "0-2" },
-          { opponent: "Costa Rica", result: "L", score: "1-3" },
-          { opponent: "Panama", result: "D", score: "1-1" },
-          { opponent: "Jamaica", result: "L", score: "0-1" },
-          { opponent: "Trinidad and Tobago", result: "W", score: "2-1" }
-        ]
-      },
-      h2h: {
-        sample: true,
-        meetings: [
-          { line: "Brazil 4–0 Haiti", competition: "Friendly", date: "Aug 2024" },
-          { line: "Brazil 3–1 Haiti", competition: "Qualifier", date: "May 2022" }
-        ]
-      },
-      lineups: {
-        home: {
-          formation: "4-3-3",
-          startingXI: [
-            { name: "Alisson", pos: "GK" },
-            { name: "Danilo", pos: "RB" },
-            { name: "Marquinhos", pos: "CB" },
-            { name: "Gabriel Magalhaes", pos: "CB" },
-            { name: "Douglas Santos", pos: "LB" },
-            { name: "Lucas Paqueta", pos: "CM" },
-            { name: "Bruno Guimaraes", pos: "CM" },
-            { name: "Casemiro", pos: "CM" },
-            { name: "Vinicius Junior", pos: "LW" },
-            { name: "Matheus Cunha", pos: "ST" },
-            { name: "Raphinha", pos: "RW" }
-          ],
-          subs: ["Igor Thiago", "Rayan", "Endrick", "Alex Sandro"]
-        },
-        away: {
-          formation: "5-2-3",
-          startingXI: [
-            { name: "Johny Placide", pos: "GK" },
-            { name: "Carlens Arcus", pos: "RB" },
-            { name: "Ricardo Ade", pos: "CB" },
-            { name: "Jean-Kevin Duverne", pos: "CB" },
-            { name: "Hannes Delcroix", pos: "CB" },
-            { name: "Martin Experience", pos: "LB" },
-            { name: "Danley Jean Jacques", pos: "CM" },
-            { name: "Jean-Ricner Bellegarde", pos: "CM" },
-            { name: "Josue Casimir", pos: "RW" },
-            { name: "Ruben Providence", pos: "LW" },
-            { name: "Frantzdy Pierrot", pos: "ST" }
-          ],
-          subs: ["Alexandre Pierre", "Lenny Joseph", "Garven Metusala", "Dominique Simon"]
-        }
-      }
-    }
-  },
-  {
-    id: "tur-par-2026",
-    status: "finished",
-    kickoff: "2026-06-20T03:00:00Z",
-    group: "D",
-    stage: "Group Stage",
-    stadium: "AT&T Stadium, Dallas",
-    referee: "Referee TBA",
-    home: { name: "Turkiye", code: "tur", flag: "tr" },
-    away: { name: "Paraguay", code: "par", flag: "py" },
-    score: { home: 0, away: 1 },
-    hasFullIntel: false,
-    winProbability: { home: 46.7, away: 25.4, draw: 27.9 }
-  },
-  {
-    id: "ned-swe-2026",
-    status: "live",
-    kickoff: "2026-06-20T17:00:00Z",
-    group: "F",
-    stage: "Group Stage",
-    stadium: "Lumen Field, Seattle",
-    referee: "Referee TBA",
-    home: { name: "Netherlands", code: "ned", flag: "nl" },
-    away: { name: "Sweden", code: "swe", flag: "se" },
-    score: { home: 2, away: 0 },
-    hasFullIntel: false,
-    winProbability: { home: 56.1, away: 20.6, draw: 23.3 }
-  },
-  {
-    id: "ger-civ-2026",
-    status: "upcoming",
-    kickoff: "2026-06-20T20:00:00Z",
-    group: "E",
-    stage: "Group Stage",
-    stadium: "Mercedes-Benz Stadium, Atlanta",
-    referee: "Referee TBA",
-    home: { name: "Germany", code: "ger", flag: "de" },
-    away: { name: "Ivory Coast", code: "civ", flag: "ci" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 62.8, away: 16.3, draw: 20.9 }
-  },
-  {
-    id: "ecu-cuw-2026",
-    status: "upcoming",
-    kickoff: "2026-06-21T00:00:00Z",
-    group: "E",
-    stage: "Group Stage",
-    stadium: "NRG Stadium, Houston",
-    referee: "Referee TBA",
-    home: { name: "Ecuador", code: "ecu", flag: "ec" },
-    away: { name: "Curacao", code: "cuw", flag: "cw" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 87.6, away: 3.5, draw: 8.9 }
-  },
-  {
-    id: "tun-jpn-2026",
-    status: "upcoming",
-    kickoff: "2026-06-21T04:00:00Z",
-    group: "F",
-    stage: "Group Stage",
-    stadium: "Levi's Stadium, Bay Area",
-    referee: "Referee TBA",
-    home: { name: "Tunisia", code: "tun", flag: "tn" },
-    away: { name: "Japan", code: "jpn", flag: "jp" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 14.3, away: 62.6, draw: 23.1 }
-  },
-  {
-    id: "esp-ksa-2026",
-    status: "upcoming",
-    kickoff: "2026-06-21T16:00:00Z",
-    group: "H",
-    stage: "Group Stage",
-    stadium: "SoFi Stadium, Los Angeles",
-    referee: "Referee TBA",
-    home: { name: "Spain", code: "esp", flag: "es" },
-    away: { name: "Saudi Arabia", code: "ksa", flag: "sa" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 88.7, away: 2.9, draw: 8.4 }
-  },
-  {
-    id: "bel-irn-2026",
-    status: "upcoming",
-    kickoff: "2026-06-21T19:00:00Z",
-    group: "G",
-    stage: "Group Stage",
-    stadium: "Gillette Stadium, Boston",
-    referee: "Referee TBA",
-    home: { name: "Belgium", code: "bel", flag: "be" },
-    away: { name: "IR Iran", code: "irn", flag: "ir" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 67.5, away: 12.6, draw: 19.9 }
-  },
-  {
-    id: "uru-cpv-2026",
-    status: "upcoming",
-    kickoff: "2026-06-21T22:00:00Z",
-    group: "H",
-    stage: "Group Stage",
-    stadium: "Arrowhead Stadium, Kansas City",
-    referee: "Referee TBA",
-    home: { name: "Uruguay", code: "uru", flag: "uy" },
-    away: { name: "Cape Verde", code: "cpv", flag: "cv" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 65.4, away: 12.3, draw: 22.3 }
-  },
-  {
-    id: "nzl-egy-2026",
-    status: "upcoming",
-    kickoff: "2026-06-22T01:00:00Z",
-    group: "G",
-    stage: "Group Stage",
-    stadium: "Estadio Azteca, Mexico City",
-    referee: "Referee TBA",
-    home: { name: "New Zealand", code: "nzl", flag: "nz" },
-    away: { name: "Egypt", code: "egy", flag: "eg" },
-    score: null,
-    hasFullIntel: false,
-    winProbability: { home: 16.6, away: 59.5, draw: 23.9 }
-  }
+/* ---------- MATCH DATA (illustrative) ---------- */
+const LIVE_MATCHES = [
+  {id:'arg-fra', state:'live', home:'ARG', away:'FRA', comp:'FIFA World Cup 2026', group:'Group A', stage:'Group Stage',
+    minute:67, half:'2nd Half', score:[2,1], possession:[58,42], shots:[14,9], aiConfidence:78, sentiment:6},
+  {id:'bra-ned', state:'live', home:'BRA', away:'NED', comp:'FIFA World Cup 2026', group:'Group D', stage:'Round of 16',
+    minute:34, half:'1st Half', score:[1,1], possession:[64,36], shots:[9,5], aiConfidence:71, sentiment:3},
 ];
 
-window.MATCH_DATA = MATCH_DATA;
+const UPCOMING_MATCHES = [
+  {id:'usa-mex', state:'upcoming', home:'USA', away:'MEX', comp:'FIFA World Cup 2026', group:'Group C', stage:'Group Stage',
+    kickoff:hrs(5), tag:'Today', formHome:'W-W-D-W-L', formAway:'W-D-W-W-W', aiConfidence:64, sentiment:2},
+  {id:'por-mar', state:'upcoming', home:'POR', away:'MAR', comp:'FIFA World Cup 2026', group:'Group H', stage:'Group Stage',
+    kickoff:hrs(27), tag:'Tomorrow', formHome:'W-W-W-D-W', formAway:'D-W-L-W-W', aiConfidence:69, sentiment:-4},
+];
 
-/* ================================================================
-   STANDINGS DATA — real FIFA World Cup 2026 group tables.
-   Only the groups used by MATCH_DATA are included to keep this
-   lean. `played` is derived from won+drawn+lost since the source
-   doesn't report it directly.
-   ================================================================ */
+const SAVED_POOL_EXTRA = [
+  {id:'cro-ger', state:'upcoming', home:'CRO', away:'GER', comp:'FIFA World Cup 2026', group:'Group F', stage:'Group Stage',
+    kickoff:hrs(31), tag:'Tomorrow', formHome:'D-W-W-L-W', formAway:'W-W-D-W-W', aiConfidence:55, sentiment:-2},
+  {id:'jpn-esp', state:'finished', home:'JPN', away:'ESP', comp:'FIFA World Cup 2026', group:'Group E', stage:'Group Stage',
+    score:[0,3], possession:[39,61], shots:[6,17], aiConfidence:74, sentiment:9, playedOn:'Jun 19'},
+];
 
-const STANDINGS_DATA = {
-  C: [
-    { rank: 1, name: "Morocco", code: "mar", won: 1, drawn: 1, lost: 0, points: 4 },
-    { rank: 2, name: "Scotland", code: "sco", won: 1, drawn: 0, lost: 1, points: 3 },
-    { rank: 3, name: "Brazil", code: "bra", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 4, name: "Haiti", code: "hti", won: 0, drawn: 0, lost: 1, points: 0 }
-  ],
-  D: [
-    { rank: 1, name: "USA", code: "usa", won: 2, drawn: 0, lost: 0, points: 6 },
-    { rank: 2, name: "Australia", code: "aus", won: 1, drawn: 0, lost: 1, points: 3 },
-    { rank: 3, name: "Turkiye", code: "tur", won: 0, drawn: 0, lost: 1, points: 0 },
-    { rank: 4, name: "Paraguay", code: "par", won: 0, drawn: 0, lost: 1, points: 0 }
-  ],
-  E: [
-    { rank: 1, name: "Germany", code: "ger", won: 1, drawn: 0, lost: 0, points: 3 },
-    { rank: 2, name: "Ivory Coast", code: "civ", won: 1, drawn: 0, lost: 0, points: 3 },
-    { rank: 3, name: "Ecuador", code: "ecu", won: 0, drawn: 0, lost: 1, points: 0 },
-    { rank: 4, name: "Curacao", code: "cuw", won: 0, drawn: 0, lost: 1, points: 0 }
-  ],
-  F: [
-    { rank: 1, name: "Sweden", code: "swe", won: 1, drawn: 0, lost: 0, points: 3 },
-    { rank: 2, name: "Japan", code: "jpn", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 3, name: "Netherlands", code: "ned", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 4, name: "Tunisia", code: "tun", won: 0, drawn: 0, lost: 1, points: 0 }
-  ],
-  G: [
-    { rank: 1, name: "New Zealand", code: "nzl", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 2, name: "IR Iran", code: "irn", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 3, name: "Belgium", code: "bel", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 4, name: "Egypt", code: "egy", won: 0, drawn: 1, lost: 0, points: 1 }
-  ],
-  H: [
-    { rank: 1, name: "Uruguay", code: "uru", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 2, name: "Saudi Arabia", code: "ksa", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 3, name: "Spain", code: "esp", won: 0, drawn: 1, lost: 0, points: 1 },
-    { rank: 4, name: "Cape Verde", code: "cpv", won: 0, drawn: 1, lost: 0, points: 1 }
-  ],
-  L: [
-    { rank: 1, name: "England", code: "eng", won: 1, drawn: 0, lost: 0, points: 3 },
-    { rank: 2, name: "Ghana", code: "gha", won: 1, drawn: 0, lost: 0, points: 3 },
-    { rank: 3, name: "Panama", code: "pan", won: 0, drawn: 0, lost: 1, points: 0 },
-    { rank: 4, name: "Croatia", code: "cro", won: 0, drawn: 0, lost: 1, points: 0 }
-  ]
-};
+const RECENT_MATCHES = [
+  {id:'col-uru', state:'finished', home:'COL', away:'URU', comp:'FIFA World Cup 2026', group:'Group G', stage:'Group Stage',
+    score:[2,0], possession:[52,48], shots:[11,8], aiConfidence:62, sentiment:5, playedOn:'Jun 20'},
+  {id:'bel-ita', state:'finished', home:'BEL', away:'ITA', comp:'FIFA World Cup 2026', group:'Group B', stage:'Group Stage',
+    score:[1,1], possession:[49,51], shots:[10,12], aiConfidence:58, sentiment:-1, playedOn:'Jun 20'},
+];
 
-// Add `played` to every row (won+drawn+lost) without retyping the data above.
-Object.values(STANDINGS_DATA).forEach(group =>
-  group.forEach(row => { row.played = row.won + row.drawn + row.lost; })
-);
+const MARKET_MOVERS = [
+  {name:'England', change:12, spark:[40,42,45,44,50,55,58,64,70,78]},
+  {name:'Brazil',  change:8,  spark:[55,53,57,58,60,59,62,64,66,68]},
+  {name:'France',  change:6,  spark:[60,61,59,62,63,62,64,65,66,67]},
+  {name:'Croatia', change:-9, spark:[50,48,47,44,42,40,38,35,33,31]},
+  {name:'Argentina', change:4, spark:[62,63,62,64,65,64,66,67,67,68]},
+  {name:'Morocco', change:-5, spark:[44,43,42,43,41,40,39,38,37,36]},
+];
 
-window.STANDINGS_DATA = STANDINGS_DATA;
+/* ---------- MATCH POOL — every known match, keyed by id ----------
+   Live/Upcoming/Recent each render their own fixed 2-card section;
+   Saved Research is dynamic and draws from this whole pool based on
+   whatever the visitor has saved (from any section, on either page). */
+const MATCH_POOL = {};
+[...LIVE_MATCHES, ...UPCOMING_MATCHES, ...RECENT_MATCHES, ...SAVED_POOL_EXTRA].forEach(m => MATCH_POOL[m.id] = m);
 
-/* ================================================================
-   SHARED UTILITIES
-   Plain function declarations so match.js (loaded after this file)
-   can call them directly.
-   ================================================================ */
+/* ---------- saved-state: persisted to localStorage, shared with match.html ---------- */
+const SAVED_STORAGE_KEY = 'worldcupiq:savedMatches';
+function loadSavedIds(){
+  try{
+    const raw = localStorage.getItem(SAVED_STORAGE_KEY);
+    if(raw) return new Set(JSON.parse(raw));
+  }catch(e){ /* localStorage unavailable — fall through to default */ }
+  return new Set(['cro-ger','jpn-esp']);
+}
+function persistSaved(){
+  try{ localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(Array.from(savedState))); }catch(e){}
+}
+const savedState = loadSavedIds();
 
-const FLAG_CODES = {
-  eng: "gb-eng", sco: "gb-sct", cro: "hr", mar: "ma", bra: "br", hti: "ht",
-  tur: "tr", par: "py", ned: "nl", swe: "se", ger: "de", civ: "ci",
-  ecu: "ec", cuw: "cw", tun: "tn", jpn: "jp", esp: "es", ksa: "sa",
-  bel: "be", irn: "ir", uru: "uy", cpv: "cv", nzl: "nz", egy: "eg",
-  gha: "gh", pan: "pa", usa: "us", aus: "au", can: "ca", qat: "qa",
-  mex: "mx", kor: "kr", col: "co", uzb: "uz", aut: "at", jor: "jo",
-  por: "pt", cod: "cd", cze: "cz", rsa: "za", sui: "ch", bih: "ba"
-};
+/* ============================================================ HELPERS ============================================================ */
+function fmtSigned(n){ return (n>0?'+':'') + n + '%'; }
 
-function getFlagUrl(code) {
-  const iso = FLAG_CODES[code] || "un";
-  return `https://flagcdn.com/w80/${iso}.png`;
+function sentimentBadge(n){
+  const cls = n>=0 ? 'badge-up' : 'badge-down';
+  const arrow = n>=0 ? '▲' : '▼';
+  return `<span class="badge ${cls}">${arrow} ${Math.abs(n)}%</span>`;
 }
 
-/** Returns a fallback flag emoji-style square if the CDN image 404s. */
-function flagFallbackHTML(name) {
-  return `<span class="flag flag-fallback" aria-hidden="true">${name.slice(0, 2).toUpperCase()}</span>`;
+function confidenceRing(pct, size=38){
+  return `<div class="confidence-ring" style="--pct:0;width:${size}px;height:${size}px" data-ring="${pct}"><span>${pct}</span></div>`;
 }
 
-/** "Fri Jun 19 · 6:00 PM EDT" — auto-correct EST/EDT for the real date. */
-function formatKickoff(iso) {
-  const d = new Date(iso);
-  const date = new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "America/New_York" }).format(d);
-  const time = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York", timeZoneName: "short" }).format(d);
-  return `${date} · ${time}`;
+function sparklinePath(values, w=120, h=34){
+  const min = Math.min(...values), max = Math.max(...values);
+  const range = (max-min)||1;
+  const pts = values.map((v,i)=>{
+    const x = (i/(values.length-1))*w;
+    const y = h - ((v-min)/range)*h;
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  return pts;
 }
 
-/** Elapsed minutes since kickoff, with a rough halftime allowance. */
-function getLiveMinute(iso) {
-  const elapsedMs = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(elapsedMs / 60000);
-  if (mins <= 45) return { label: `${Math.max(mins, 1)}'`, phase: "first" };
-  if (mins <= 60) return { label: "HT", phase: "half" };
-  if (mins <= 105) return { label: `${mins - 15}'`, phase: "second" };
-  return { label: "90+'", phase: "end" };
+function timeLeft(ts){
+  let diff = Math.max(0, ts - Date.now());
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  return `${h}h ${m}m`;
 }
 
-/** Days/hours/minutes/seconds until kickoff. */
-function getCountdownParts(iso) {
-  const diff = new Date(iso).getTime() - Date.now();
-  if (diff <= 0) return null;
-  const totalSeconds = Math.floor(diff / 1000);
-  return {
-    days: Math.floor(totalSeconds / 86400),
-    hours: Math.floor((totalSeconds % 86400) / 3600),
-    minutes: Math.floor((totalSeconds % 3600) / 60),
-    seconds: totalSeconds % 60
-  };
+const clockSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mc-countdown-clock" style="width:12px;height:12px"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`;
+const bookmarkSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`;
+const arrowUpRightSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17L17 7M7 7h10v10"/></svg>`;
+const archiveSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>`;
+const trashSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v4M14 11v4"/></svg>`;
+
+/* ============================================================ CARD BUILDERS ============================================================ */
+function teamBlock(code, side){
+  const t = TEAMS[code];
+  return `<div class="mc-team ${side}"><span class="mc-flag">${t.flag}</span><span class="mc-team-name">${t.name}</span></div>`;
 }
 
-/** Compact "1d 14h" style string for match cards. */
-function formatCountdownShort(iso) {
-  const p = getCountdownParts(iso);
-  if (!p) return "Kicking off";
-  if (p.days > 0) return `${p.days}d ${p.hours}h`;
-  if (p.hours > 0) return `${p.hours}h ${p.minutes}m`;
-  return `${p.minutes}m ${p.seconds}s`;
+function metaLine(m){
+  return `<div class="mc-comp"><b>${m.comp}</b> · ${m.group} · ${m.stage}</div>`;
 }
 
-/* ================================================================
-   FEATURE 3 FOUNDATION — MATCH ARCHIVE SYSTEM
-   This is a personal site with no live polling, so the static
-   `status` field on each match can go stale (a "live" match stays
-   labeled "live" forever once kickoff has passed, even hours
-   later). getEffectiveStatus() derives the REAL status from the
-   kickoff timestamp vs. the viewer's clock, so:
-     - an "upcoming" match whose kickoff has passed becomes "live"
-     - a "live" match more than ~130 min past kickoff (full match +
-       stoppage + a buffer) becomes "finished" automatically
-   Both pages use this instead of the raw `status` field, so a
-   match genuinely moves from Live -> Recent Matches on its own.
-   ================================================================ */
-function getEffectiveStatus(match) {
-  if (match.status === "finished") return "finished";
-  const elapsedMin = (Date.now() - new Date(match.kickoff).getTime()) / 60000;
-  if (elapsedMin < 0) return "upcoming";
-  // Kickoff has happened. If no score was ever connected for this match
-  // (sample "upcoming" matches only carry a win-probability, not a live
-  // score), there's nothing honest to show as "live" — archive it rather
-  // than fabricate a result.
-  if (!match.score) return "finished";
-  if (elapsedMin >= 130) return "finished";
-  return "live";
+function statCell(label, valueHtml, extraClass=''){
+  return `<div class="mc-stat ${extraClass}"><div class="mc-stat-label">${label}</div><div class="mc-stat-val">${valueHtml}</div></div>`;
 }
 
-/** True when a match was auto-archived purely by clock drift (no live feed
-    confirmed the real final score) — used to caveat the displayed score. */
-function isAutoArchived(match) {
-  return match.status !== "finished" && getEffectiveStatus(match) === "finished";
+function actionsRow(m){
+  const isSaved = savedState.has(m.id);
+  return `
+  <div class="mc-actions">
+    <button class="btn btn-ghost save-toggle ${isSaved?'is-saved':''}" data-save="${m.id}">
+      ${bookmarkSvg.replace('<svg ', '<svg style="width:14px;height:14px" ')} ${isSaved?'Saved':'Save'}
+    </button>
+    <button class="btn btn-gold" data-openmarket="${m.id}">
+      Open Market ${arrowUpRightSvg.replace('<svg ', '<svg style="width:13px;height:13px" ')}
+    </button>
+  </div>`;
 }
 
-/* ================================================================
-   HOME PAGE RENDERING
-   Guarded so this file can be safely loaded on match.html too.
-   ================================================================ */
+function savedActionsRow(m){
+  return `
+  <div class="saved-actions" style="margin-top:10px;">
+    <button class="icon-only" data-archive="${m.id}" title="Archive match">${archiveSvg}</button>
+    <button class="icon-only danger" data-delete="${m.id}" title="Delete match">${trashSvg}</button>
+  </div>`;
+}
 
-if (document.body.dataset.page === "home") {
+function cardLive(m, savedContext=false){
+  return `
+  <article class="match-card is-live reveal" data-card="${m.id}">
+    <div class="mc-top">
+      ${metaLine(m)}
+      <span class="badge badge-live"><span class="live-dot"></span> LIVE</span>
+    </div>
+    <div class="mc-teams">
+      ${teamBlock(m.home,'home')}
+      <div class="mc-score">${m.score[0]}<span class="dash">:</span>${m.score[1]}</div>
+      ${teamBlock(m.away,'away')}
+    </div>
+    <div class="mc-subline is-live"><span class="live-dot"></span> ${m.minute}' · ${m.half}</div>
+    <div class="mc-stats">
+      ${statCell('Possession', `${m.possession[0]}%`)}
+      ${statCell('Shots', `${m.shots[0]}–${m.shots[1]}`)}
+      ${statCell('AI Confidence', `<div class="mc-stat-ring">${confidenceRing(m.aiConfidence,28)}</div>`)}
+      ${statCell('Market', sentimentBadge(m.sentiment))}
+    </div>
+    <div class="mc-possession">
+      <span class="mc-poss-label mono">${m.possession[0]}%</span>
+      <div class="mc-poss-bar"><div class="mc-poss-fill" data-width="${m.possession[0]}"></div></div>
+      <span class="mc-poss-label mono">${m.possession[1]}%</span>
+    </div>
+    ${actionsRow(m)}
+    ${savedContext?savedActionsRow(m):''}
+  </article>`;
+}
 
-  let activeFilter = "all";
-  let searchTerm = "";
+function cardUpcoming(m, savedContext=false){
+  return `
+  <article class="match-card is-upcoming reveal" data-card="${m.id}">
+    <div class="mc-top">
+      ${metaLine(m)}
+      <span class="badge badge-neutral ${m.tag==='Today'?'mc-tag-today':'mc-tag-tomorrow'}">${m.tag}</span>
+    </div>
+    <div class="mc-teams">
+      ${teamBlock(m.home,'home')}
+      <span class="mc-vs">VS</span>
+      ${teamBlock(m.away,'away')}
+    </div>
+    <div class="mc-subline is-upcoming">${clockSvg} <span data-countdown="${m.kickoff}">Kicks off in ${timeLeft(m.kickoff)}</span></div>
+    <div class="mc-stats">
+      ${statCell('Form · Home', `<span class="mono" style="font-size:12px">${m.formHome}</span>`)}
+      ${statCell('Form · Away', `<span class="mono" style="font-size:12px">${m.formAway}</span>`)}
+      ${statCell('AI Confidence', `<div class="mc-stat-ring">${confidenceRing(m.aiConfidence,28)}</div>`)}
+      ${statCell('Market', sentimentBadge(m.sentiment))}
+    </div>
+    ${actionsRow(m)}
+    ${savedContext?savedActionsRow(m):''}
+  </article>`;
+}
 
-  function teamFlagImg(team) {
-    return `<img class="flag" src="${getFlagUrl(team.code)}" alt="${team.name} flag"
-      onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'flag flag-fallback',textContent:'${team.code.slice(0,3).toUpperCase()}'}))">`;
+function cardFinished(m, savedContext=false){
+  return `
+  <article class="match-card is-finished reveal" data-card="${m.id}">
+    <div class="mc-top">
+      ${metaLine(m)}
+      <span class="badge badge-neutral">FT</span>
+    </div>
+    <div class="mc-teams">
+      ${teamBlock(m.home,'home')}
+      <div class="mc-score">${m.score[0]}<span class="dash">:</span>${m.score[1]}</div>
+      ${teamBlock(m.away,'away')}
+    </div>
+    <div class="mc-subline muted mono">Full time · ${m.playedOn}</div>
+    <div class="mc-stats">
+      ${statCell('Possession', `${m.possession[0]}%`)}
+      ${statCell('Shots', `${m.shots[0]}–${m.shots[1]}`)}
+      ${statCell('AI Confidence', `<div class="mc-stat-ring">${confidenceRing(m.aiConfidence,28)}</div>`)}
+      ${statCell('Market Close', sentimentBadge(m.sentiment))}
+    </div>
+    <div class="mc-possession">
+      <span class="mc-poss-label mono">${m.possession[0]}%</span>
+      <div class="mc-poss-bar"><div class="mc-poss-fill" data-width="${m.possession[0]}"></div></div>
+      <span class="mc-poss-label mono">${m.possession[1]}%</span>
+    </div>
+    ${actionsRow(m)}
+    ${savedContext?savedActionsRow(m):''}
+  </article>`;
+}
+
+function buildCard(m, savedContext=false){
+  if(m.state==='live') return cardLive(m, savedContext);
+  if(m.state==='upcoming') return cardUpcoming(m, savedContext);
+  return cardFinished(m, savedContext);
+}
+
+/* ============================================================ MOVER CARD ============================================================ */
+function buildMover(mv){
+  const isUp = mv.change >= 0;
+  const pts = sparklinePath(mv.spark);
+  return `
+  <div class="mover-card reveal">
+    <div class="mover-top">
+      <span class="mover-name">${mv.name}</span>
+      <span class="mover-chg ${isUp?'up':'down'}" data-countup="${mv.change}">${isUp?'+':''}0%</span>
+    </div>
+    <div class="mover-sub">Win Probability</div>
+    <svg class="mover-spark" viewBox="0 0 120 34" preserveAspectRatio="none">
+      <polyline points="${pts}" fill="none" stroke="${isUp?'var(--up)':'var(--down)'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>`;
+}
+
+/* ============================================================ RENDER ============================================================ */
+function renderAll(){
+  document.getElementById('liveMatches').innerHTML = LIVE_MATCHES.map(m=>buildCard(m)).join('') || emptyState('No live matches right now.');
+  document.getElementById('upcomingMatches').innerHTML = UPCOMING_MATCHES.map(m=>buildCard(m)).join('');
+  document.getElementById('recentMatches').innerHTML = RECENT_MATCHES.map(m=>buildCard(m)).join('');
+  document.getElementById('marketMovers').innerHTML = MARKET_MOVERS.map(buildMover).join('');
+  document.getElementById('heroTicker').innerHTML = tickerHtml();
+  renderSaved();
+}
+
+/* Saved Research is fully dynamic: draws from the shared pool based on
+   whatever is currently in savedState, capped at 2 per the spec. Called
+   on first load and again after every save / unsave / archive / delete. */
+function renderSaved(animateNow=false){
+  const ids = Array.from(savedState).filter(id => MATCH_POOL[id]).slice(0,2);
+  const container = document.getElementById('savedMatches');
+  container.innerHTML = ids.length
+    ? ids.map(id => buildCard(MATCH_POOL[id], true)).join('')
+    : emptyState('Save a match to build your research list.');
+  document.getElementById('savedCount').textContent = savedState.size;
+  if(animateNow){
+    container.querySelectorAll('.reveal').forEach(el=>el.classList.add('in'));
+    animateRings(container);
+  } else {
+    container.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
   }
+}
 
-  function buildCard(match) {
-    const status = getEffectiveStatus(match);
-    const card = document.createElement("article");
-    card.className = `match-card status-${status}`;
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.dataset.id = match.id;
+function emptyState(msg){ return `<div class="empty-state">${msg}</div>`; }
 
-    let statusHTML = "";
-    let centerHTML = "";
+function tickerHtml(){
+  const items = MARKET_MOVERS.map(mv=>`<span class="ticker-item"><span class="t-name">${mv.name}</span><span class="t-chg ${mv.change>=0?'up':'down'}">${fmtSigned(mv.change)}</span></span>`).join('');
+  return items + items; /* duplicated for seamless loop */
+}
 
-    if (status === "live") {
-      const min = getLiveMinute(match.kickoff);
-      statusHTML = `<span class="status-pill live"><span class="pulse-dot small"></span>${min.phase === "half" ? "HALFTIME" : "LIVE " + min.label}</span>`;
-      centerHTML = `
-        <span class="score">${match.score.home}</span>
-        <span class="score-sep">–</span>
-        <span class="score">${match.score.away}</span>`;
-    } else if (status === "upcoming") {
-      statusHTML = `<span class="status-pill upcoming">KICKOFF IN</span>`;
-      centerHTML = `<span class="countdown-time" data-countdown="${match.kickoff}">${formatCountdownShort(match.kickoff)}</span>`;
-    } else {
-      if (!match.score) {
-        statusHTML = `<span class="status-pill finished">No Result</span>`;
-        centerHTML = `<span class="countdown-time">Not connected</span>`;
-      } else {
-        const ftLabel = isAutoArchived(match) ? "FT · last known" : "FT";
-        statusHTML = `<span class="status-pill finished">${ftLabel}</span>`;
-        centerHTML = `
-        <span class="score">${match.score.home}</span>
-        <span class="score-sep">–</span>
-        <span class="score">${match.score.away}</span>`;
-      }
+/* ============================================================ INTERACTIVITY ============================================================ */
+function wireEvents(){
+  document.body.addEventListener('click', (e)=>{
+    const saveBtn = e.target.closest('[data-save]');
+    if(saveBtn){
+      const id = saveBtn.dataset.save;
+      if(savedState.has(id)) savedState.delete(id); else savedState.add(id);
+      persistSaved();
+      const nowSaved = savedState.has(id);
+      saveBtn.classList.toggle('is-saved', nowSaved);
+      saveBtn.innerHTML = `${bookmarkSvg.replace('<svg ', '<svg style="width:14px;height:14px" ')} ${nowSaved?'Saved':'Save'}`;
+      renderSaved(true);
+      return;
     }
-
-    card.innerHTML = `
-      <div class="card-row-top">
-        <span class="meta-tag">Group ${match.group} · ${match.stage}</span>
-        ${statusHTML}
-      </div>
-      <div class="card-teams">
-        <div class="team">${teamFlagImg(match.home)}<span class="team-name">${match.home.name}</span></div>
-        <div class="score-block">${centerHTML}</div>
-        <div class="team">${teamFlagImg(match.away)}<span class="team-name">${match.away.name}</span></div>
-      </div>
-      <div class="card-row-bottom">
-        <span>${formatKickoff(match.kickoff)}</span>
-        <span>${match.stadium.split(",")[0]}</span>
-      </div>
-    `;
-
-    card.addEventListener("click", () => goToMatch(match.id));
-    card.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goToMatch(match.id); }
-    });
-
-    return card;
-  }
-
-  function goToMatch(id) {
-    window.location.href = `match.html?id=${id}`;
-  }
-
-  function matchesFilter(match) {
-    const status = getEffectiveStatus(match);
-    if (activeFilter === "live" && status !== "live") return false;
-    if (activeFilter === "upcoming" && status !== "upcoming") return false;
-    if (activeFilter === "recent" && status !== "finished") return false;
-    if (!searchTerm) return true;
-    const haystack = `${match.home.name} ${match.away.name} ${match.group} ${match.stage}`.toLowerCase();
-    return haystack.includes(searchTerm);
-  }
-
-  /* Feature 3 foundation: a cap for "Last 20 / Last 50 / tournament archive"
-     later. Left null (no limit) intentionally — per the brief, only the
-     foundation is built now, not those larger views. Set a number here
-     later (e.g. 20) to cap the Recent Matches grid without touching
-     any other logic. */
-  const RECENT_MATCHES_DISPLAY_LIMIT = null;
-
-  /** Safely set .innerHTML — does nothing (and warns once) instead of
-      throwing if the element doesn't exist, e.g. from a stale HTML file
-      paired with a newer home.js. Keeps one missing element from taking
-      down the entire render(). */
-  function safeSetHTML(id, html) {
-    const el = document.getElementById(id);
-    if (!el) { console.warn(`#${id} not found — is index.html out of date?`); return; }
-    el.innerHTML = html;
-  }
-  function safeSetText(id, text) {
-    const el = document.getElementById(id);
-    if (!el) { console.warn(`#${id} not found — is index.html out of date?`); return; }
-    el.textContent = text;
-  }
-  function safeSetHidden(id, value) {
-    const el = document.getElementById(id);
-    if (!el) { console.warn(`#${id} not found — is index.html out of date?`); return; }
-    el.hidden = value;
-  }
-  function safeAppend(id, node) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.appendChild(node);
-  }
-
-  function render() {
-    safeSetHTML("liveGrid", "");
-    safeSetHTML("upcomingGrid", "");
-    safeSetHTML("recentGrid", "");
-
-    const visible = MATCH_DATA.filter(matchesFilter);
-    const live = visible.filter(m => getEffectiveStatus(m) === "live");
-    const upcoming = visible.filter(m => getEffectiveStatus(m) === "upcoming");
-    let recent = visible.filter(m => getEffectiveStatus(m) === "finished");
-    // Most recently played first, so newly auto-archived matches surface at the top.
-    recent = recent.slice().sort((a, b) => new Date(b.kickoff) - new Date(a.kickoff));
-    if (RECENT_MATCHES_DISPLAY_LIMIT) recent = recent.slice(0, RECENT_MATCHES_DISPLAY_LIMIT);
-
-    live.forEach(m => safeAppend("liveGrid", buildCard(m)));
-    upcoming.forEach(m => safeAppend("upcomingGrid", buildCard(m)));
-    recent.forEach(m => safeAppend("recentGrid", buildCard(m)));
-
-    safeSetText("liveCount", live.length);
-    safeSetText("upcomingCount", upcoming.length);
-    safeSetText("recentCount", recent.length);
-    safeSetHidden("liveSection", activeFilter === "upcoming" || activeFilter === "recent");
-    safeSetHidden("upcomingSection", activeFilter === "live" || activeFilter === "recent");
-    safeSetHidden("recentSection", activeFilter === "live" || activeFilter === "upcoming");
-
-    safeSetHidden("emptyState", visible.length !== 0);
-
-    renderTicker();
-  }
-
-  function renderTicker() {
-    const liveMatches = MATCH_DATA.filter(m => getEffectiveStatus(m) === "live");
-    const ticker = document.getElementById("liveTicker");
-    const track = document.getElementById("tickerTrack");
-    if (!ticker || !track) { console.warn("#liveTicker/#tickerTrack not found — is index.html out of date?"); return; }
-    if (liveMatches.length === 0) { ticker.hidden = true; return; }
-    ticker.hidden = false;
-    track.innerHTML = liveMatches.map(m => {
-      const min = getLiveMinute(m.kickoff);
-      return `<span class="ticker-item">${m.home.name} <b>${m.score.home}–${m.score.away}</b> ${m.away.name} <span class="t-min">${min.label}</span></span>`;
-    }).join("");
-  }
-
-  // Filter pills
-  document.getElementById("filterPills").addEventListener("click", (e) => {
-    const btn = e.target.closest(".pill");
-    if (!btn) return;
-    document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-    btn.classList.add("active");
-    activeFilter = btn.dataset.filter;
-    render();
+    const marketBtn = e.target.closest('[data-openmarket]');
+    if(marketBtn){
+      e.stopPropagation();
+      window.open('https://polymarket.com', '_blank', 'noopener');
+      return;
+    }
+    const archiveBtn = e.target.closest('[data-archive]');
+    if(archiveBtn){
+      const id = archiveBtn.dataset.archive;
+      savedState.delete(id);
+      persistSaved();
+      const card = archiveBtn.closest('.match-card');
+      card.style.transition='opacity .3s, transform .3s';
+      card.style.opacity='0'; card.style.transform='translateX(12px)';
+      setTimeout(()=>renderSaved(true), 300);
+      return;
+    }
+    const deleteBtn = e.target.closest('[data-delete]');
+    if(deleteBtn){
+      const id = deleteBtn.dataset.delete;
+      savedState.delete(id);
+      persistSaved();
+      const card = deleteBtn.closest('.match-card');
+      card.style.transition='opacity .3s, transform .3s';
+      card.style.opacity='0'; card.style.transform='translateX(12px)';
+      setTimeout(()=>renderSaved(true), 300);
+      return;
+    }
+    const card = e.target.closest('.match-card');
+    if(card){
+      window.location.href = `match.html?id=${card.dataset.card}`;
+    }
   });
 
-  // Search
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    searchTerm = e.target.value.trim().toLowerCase();
-    render();
+  document.getElementById('navSaved').addEventListener('click', ()=>{
+    document.getElementById('section-saved').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  document.getElementById('navSettings').addEventListener('click', ()=>{
+    alert('Settings panel — coming soon.');
   });
 
-  render();
-  // Re-render every second. With only ~12 matches this is cheap, and it's
-  // what makes Feature 3 (auto-archiving) actually visible live: a match
-  // crossing the finished threshold visibly jumps from Live to Recent
-  // without needing a page reload.
-  setInterval(render, 1000);
+  document.getElementById('searchInput').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){
+      const q = e.target.value.trim();
+      if(q) document.getElementById('section-live').scrollIntoView({behavior:'smooth'});
+    }
+  });
 }
+
+/* ---------- animated number rings / bars / count-ups on reveal ---------- */
+function animateRings(scope=document){
+  scope.querySelectorAll('.confidence-ring[data-ring]').forEach(ring=>{
+    const target = parseInt(ring.dataset.ring, 10);
+    let cur = 0;
+    const span = ring.querySelector('span');
+    const step = Math.max(1, Math.round(target/30));
+    const iv = setInterval(()=>{
+      cur += step;
+      if(cur >= target){ cur = target; clearInterval(iv); }
+      ring.style.setProperty('--pct', cur);
+      span.textContent = cur;
+    }, 16);
+  });
+  scope.querySelectorAll('.mc-poss-fill[data-width]').forEach(bar=>{
+    requestAnimationFrame(()=>{ bar.style.width = bar.dataset.width + '%'; });
+  });
+  scope.querySelectorAll('[data-countup]').forEach(el=>{
+    const target = parseInt(el.dataset.countup, 10);
+    const isUp = target >= 0;
+    let cur = 0;
+    const step = Math.max(1, Math.round(Math.abs(target)/20));
+    const iv = setInterval(()=>{
+      cur += step;
+      if(cur >= Math.abs(target)){ cur = Math.abs(target); clearInterval(iv); }
+      el.textContent = `${isUp?'+':'-'}${cur}%`;
+    }, 18);
+  });
+}
+
+/* ---------- reveal on scroll (shared observer so dynamically-added cards can reuse it) ---------- */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('in');
+      animateRings(en.target);
+      revealObserver.unobserve(en.target);
+    }
+  });
+}, {threshold:0.15});
+
+function setupReveal(){
+  document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+}
+
+/* ---------- live countdown ticking ---------- */
+function tickCountdowns(){
+  document.querySelectorAll('[data-countdown]').forEach(el=>{
+    const ts = parseInt(el.dataset.countdown, 10);
+    el.textContent = `Kicks off in ${timeLeft(ts)}`;
+  });
+}
+
+/* ============================================================ INIT ============================================================ */
+document.addEventListener('DOMContentLoaded', ()=>{
+  renderAll();
+  wireEvents();
+  setupReveal();
+  setInterval(tickCountdowns, 60000);
+});
