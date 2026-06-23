@@ -1,0 +1,22 @@
+{
+  "name": "WorldCupIQ",
+  "short_name": "WorldCupIQ",
+  "description": "World Cup Football Intelligence Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0d14",
+  "theme_color": "#0a0d14",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "assets/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
